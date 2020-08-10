@@ -1,4 +1,4 @@
-const { exec } = require('./utils');
+const {exec} = require('./utils');
 
 describe('exec tests', () => {
   test('exec is await and outputs hello', async () => {
