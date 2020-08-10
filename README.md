@@ -20,7 +20,7 @@ steps:
     with:
       python-version: '3.x'
 
-  - uses: iterative/dvc-action@version-1
+  - uses: iterative/dvc-action@v1
     with:
       version: latest
       remote_driver: 'all'
