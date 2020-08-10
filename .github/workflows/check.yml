@@ -26,7 +26,7 @@ jobs:
       with:
         python-version: '3.x'
 
-    - uses: iterative/dvc-action@version-1
+    - uses: iterative/dvc-action@v1
       with:
         version: '1.0.0'
 
@@ -38,7 +38,7 @@ jobs:
           return 1
         fi
 
-    - uses: iterative/dvc-action@version-1
+    - uses: iterative/dvc-action@v1
       with:
         version: latest
       
