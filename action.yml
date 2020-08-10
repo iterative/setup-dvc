@@ -1,13 +1,19 @@
 name: 'DVC (Data Version Control)'
-description: 'Sets up DVC (Data Version Control) in your GitHub Actions workflow.'
+description:
+  'Sets up DVC (Data Version Control) in your GitHub Actions workflow.'
 author: 'Iterative, Inc.'
 inputs:
   version:
-    description: 'The version of DVC to install. A value of `latest` will install the latest version of DVC. Defaults to `latest`.'
+    description:
+      'The version of DVC to install. A value of `latest` will install the
+      latest version of DVC. Defaults to `latest`.'
     default: 'latest'
     required: false
   remote_driver:
-    description: 'Depending on the remote storage type you plan to use to keep and share your data, you might need to specify one of the optional dependencies: s3, gs, azure, oss, ssh. Or all to include them all. Defaults to `all`.'
+    description:
+      'Depending on the remote storage type you plan to use to keep and share
+      your data, you might need to specify one of the optional dependencies: s3,
+      gs, azure, oss, ssh. Or all to include them all. Defaults to `all`.'
     default: 'all'
     required: false
 runs:
