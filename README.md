@@ -1,6 +1,6 @@
 # DVC Action V1
 
-This action installs [DVC](https://dvc.org/) so your workflow can access it.  
+This action installs [DVC](https://dvc.org/) so your workflow can access it.
 It automatically uninstalls previous DVC installations.
 
 It requires Python 3. You can install it on your own or use
