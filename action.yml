@@ -6,6 +6,10 @@ inputs:
     description: 'The version of DVC to install. A value of `latest` will install the latest version of DVC. Defaults to `latest`.'
     default: 'latest'
     required: false
+  remote_driver:
+    description: 'Depending on the remote storage type you plan to use to keep and share your data, you might need to specify one of the optional dependencies: s3, gs, azure, oss, ssh. Or all to include them all. Defaults to `all`.'
+    default: 'all'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

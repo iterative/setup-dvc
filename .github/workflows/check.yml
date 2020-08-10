@@ -4,8 +4,11 @@ on: [push]
 
 jobs:
   check:
-    runs-on: [ubuntu-latest]
-    
+    strategy:
+      matrix:
+        runs-on: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.runs-on }}
+
     steps:
     - uses: actions/checkout@v2
 
@@ -19,21 +22,31 @@ jobs:
       run: |
         npm run test
 
-    - uses: iterative/dvc
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - uses: iterative/dvc-action@version-1
       with:
         version: '1.0.0'
 
     - name: "DVC test"
       run: |
+        dvc version
         DVC_VER=$(dvc --version)
         if [ $DVC_VER != '1.0.0' ]; then
           return 1
         fi
 
-    - uses: iterative/dvc
+    - uses: iterative/dvc-action@version-1
       with:
         version: latest
       
-    - name: "CML test"
+    - name: "DVC test"
       run: |
         dvc version
+        DVC_VER=$(dvc --version)
+        if [ $DVC_VER == '1.0.0' ]; then
+          return 1
+        fi
+

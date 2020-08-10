@@ -1,5 +1,4 @@
 const util = require('util');
-const core = require('@actions/core');
 
 const execp = util.promisify(require('child_process').exec);
 const exec = async (command, opts) => {
@@ -17,10 +16,17 @@ const exec = async (command, opts) => {
 };
 
 const setup_dvc = async opts => {
-  const { version } = opts;
-  core.info(`Intalling DVC version ${version}`);
+  const { version, remote_driver = 'all' } = opts;
+  try {
+    console.log(`Uninstalling previous DVC`);
+    await exec(`pip uninstall -y dvc`);
+  } catch (err) {}
+
+  console.log(`Installing DVC version ${version} with remote ${remote_driver}`);
   await exec(
-    `pip install dvc[all]${version !== 'latest' ? `==${version}` : ''}`
+    `yes | pip install dvc[${remote_driver}]${
+      version !== 'latest' ? `==${version}` : ''
+    }`
   );
 };
 
