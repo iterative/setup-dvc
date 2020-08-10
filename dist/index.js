@@ -1,255 +1,288 @@
-module.exports = function(e, t) {
-  "use strict";
+module.exports = (function (e, t) {
+  'use strict';
   var n = {};
   function __webpack_require__(t) {
     if (n[t]) {
-      return n[t].exports
+      return n[t].exports;
     }
-    var r = n[t] = {i : t, l : false, exports : {}};
+    var r = (n[t] = { i: t, l: false, exports: {} });
     e[t].call(r.exports, r, r.exports, __webpack_require__);
     r.l = true;
-    return r.exports
+    return r.exports;
   }
-  __webpack_require__.ab = __dirname + "/";
-  function startup() { return __webpack_require__(614) }
-  return startup()
-}({
-  87 : function(e) { e.exports = require("os") },
-  129 : function(e) { e.exports = require("child_process") },
-  431 : function(e, t, n) {
-    "use strict";
-    var r = this && this.__importStar || function(e) {
-      if (e && e.__esModule)
-        return e;
-      var t = {};
-      if (e != null)
-        for (var n in e)
-          if (Object.hasOwnProperty.call(e, n))
-            t[n] = e[n];
-      t["default"] = e;
-      return t
-    };
-    Object.defineProperty(t, "__esModule", {value : true});
+  __webpack_require__.ab = __dirname + '/';
+  function startup() {
+    return __webpack_require__(614);
+  }
+  return startup();
+})({
+  87: function (e) {
+    e.exports = require('os');
+  },
+  129: function (e) {
+    e.exports = require('child_process');
+  },
+  431: function (e, t, n) {
+    'use strict';
+    var r =
+      (this && this.__importStar) ||
+      function (e) {
+        if (e && e.__esModule) return e;
+        var t = {};
+        if (e != null)
+          for (var n in e) if (Object.hasOwnProperty.call(e, n)) t[n] = e[n];
+        t['default'] = e;
+        return t;
+      };
+    Object.defineProperty(t, '__esModule', { value: true });
     const o = r(n(87));
     function issueCommand(e, t, n) {
       const r = new Command(e, t, n);
-      process.stdout.write(r.toString() + o.EOL)
+      process.stdout.write(r.toString() + o.EOL);
     }
     t.issueCommand = issueCommand;
-    function issue(e, t = "") { issueCommand(e, {}, t) }
+    function issue(e, t = '') {
+      issueCommand(e, {}, t);
+    }
     t.issue = issue;
-    const s = "::";
+    const s = '::';
     class Command {
       constructor(e, t, n) {
         if (!e) {
-          e = "missing.command"
+          e = 'missing.command';
         }
         this.command = e;
         this.properties = t;
-        this.message = n
+        this.message = n;
       }
       toString() {
         let e = s + this.command;
         if (this.properties && Object.keys(this.properties).length > 0) {
-          e += " ";
+          e += ' ';
           let t = true;
           for (const n in this.properties) {
             if (this.properties.hasOwnProperty(n)) {
               const r = this.properties[n];
               if (r) {
                 if (t) {
-                  t = false
+                  t = false;
                 } else {
-                  e += ","
+                  e += ',';
                 }
-                e += `${n}=${escapeProperty(r)}`
+                e += `${n}=${escapeProperty(r)}`;
               }
             }
           }
         }
         e += `${s}${escapeData(this.message)}`;
-        return e
+        return e;
       }
     }
     function toCommandValue(e) {
       if (e === null || e === undefined) {
-        return ""
-      } else if (typeof e === "string" || e instanceof String) {
-        return e
+        return '';
+      } else if (typeof e === 'string' || e instanceof String) {
+        return e;
       }
-      return JSON.stringify(e)
+      return JSON.stringify(e);
     }
     t.toCommandValue = toCommandValue;
     function escapeData(e) {
       return toCommandValue(e)
-          .replace(/%/g, "%25")
-          .replace(/\r/g, "%0D")
-          .replace(/\n/g, "%0A")
+        .replace(/%/g, '%25')
+        .replace(/\r/g, '%0D')
+        .replace(/\n/g, '%0A');
     }
     function escapeProperty(e) {
       return toCommandValue(e)
-          .replace(/%/g, "%25")
-          .replace(/\r/g, "%0D")
-          .replace(/\n/g, "%0A")
-          .replace(/:/g, "%3A")
-          .replace(/,/g, "%2C")
+        .replace(/%/g, '%25')
+        .replace(/\r/g, '%0D')
+        .replace(/\n/g, '%0A')
+        .replace(/:/g, '%3A')
+        .replace(/,/g, '%2C');
     }
   },
-  470 : function(e, t, n) {
-    "use strict";
-    var r = this && this.__awaiter || function(e, t, n, r) {
-      function adopt(e) {
-        return e instanceof n ? e : new n(function(t) { t(e) })
-      }
-      return new (n || (n = Promise))(function(n, o) {
-        function fulfilled(e) {
-          try {
-            step(r.next(e))
-          } catch (e) {
-            o(e)
+  470: function (e, t, n) {
+    'use strict';
+    var r =
+      (this && this.__awaiter) ||
+      function (e, t, n, r) {
+        function adopt(e) {
+          return e instanceof n
+            ? e
+            : new n(function (t) {
+                t(e);
+              });
+        }
+        return new (n || (n = Promise))(function (n, o) {
+          function fulfilled(e) {
+            try {
+              step(r.next(e));
+            } catch (e) {
+              o(e);
+            }
           }
-        }
-        function rejected(e) {
-          try {
-            step(r["throw"](e))
-          } catch (e) {
-            o(e)
+          function rejected(e) {
+            try {
+              step(r['throw'](e));
+            } catch (e) {
+              o(e);
+            }
           }
-        }
-        function step(e) {
-          e.done ? n(e.value) : adopt(e.value).then(fulfilled, rejected)
-        }
-        step((r = r.apply(e, t || [])).next())
-      })
-    };
-    var o = this && this.__importStar || function(e) {
-      if (e && e.__esModule)
-        return e;
-      var t = {};
-      if (e != null)
-        for (var n in e)
-          if (Object.hasOwnProperty.call(e, n))
-            t[n] = e[n];
-      t["default"] = e;
-      return t
-    };
-    Object.defineProperty(t, "__esModule", {value : true});
+          function step(e) {
+            e.done ? n(e.value) : adopt(e.value).then(fulfilled, rejected);
+          }
+          step((r = r.apply(e, t || [])).next());
+        });
+      };
+    var o =
+      (this && this.__importStar) ||
+      function (e) {
+        if (e && e.__esModule) return e;
+        var t = {};
+        if (e != null)
+          for (var n in e) if (Object.hasOwnProperty.call(e, n)) t[n] = e[n];
+        t['default'] = e;
+        return t;
+      };
+    Object.defineProperty(t, '__esModule', { value: true });
     const s = n(431);
     const i = o(n(87));
     const u = o(n(622));
     var a;
-    (function(e) {
-      e[e["Success"] = 0] = "Success";
-      e[e["Failure"] = 1] = "Failure"
-    })(a = t.ExitCode || (t.ExitCode = {}));
+    (function (e) {
+      e[(e['Success'] = 0)] = 'Success';
+      e[(e['Failure'] = 1)] = 'Failure';
+    })((a = t.ExitCode || (t.ExitCode = {})));
     function exportVariable(e, t) {
       const n = s.toCommandValue(t);
       process.env[e] = n;
-      s.issueCommand("set-env", {name : e}, n)
+      s.issueCommand('set-env', { name: e }, n);
     }
     t.exportVariable = exportVariable;
-    function setSecret(e) { s.issueCommand("add-mask", {}, e) }
+    function setSecret(e) {
+      s.issueCommand('add-mask', {}, e);
+    }
     t.setSecret = setSecret;
     function addPath(e) {
-      s.issueCommand("add-path", {}, e);
-      process.env["PATH"] = `${e}${u.delimiter}${process.env["PATH"]}`
+      s.issueCommand('add-path', {}, e);
+      process.env['PATH'] = `${e}${u.delimiter}${process.env['PATH']}`;
     }
     t.addPath = addPath;
     function getInput(e, t) {
       const n =
-          process.env[`INPUT_${e.replace(/ /g, "_").toUpperCase()}`] || "";
+        process.env[`INPUT_${e.replace(/ /g, '_').toUpperCase()}`] || '';
       if (t && t.required && !n) {
-        throw new Error(`Input required and not supplied: ${e}`)
+        throw new Error(`Input required and not supplied: ${e}`);
       }
-      return n.trim()
+      return n.trim();
     }
     t.getInput = getInput;
-    function setOutput(e, t) { s.issueCommand("set-output", {name : e}, t) }
+    function setOutput(e, t) {
+      s.issueCommand('set-output', { name: e }, t);
+    }
     t.setOutput = setOutput;
-    function setCommandEcho(e) { s.issue("echo", e ? "on" : "off") }
+    function setCommandEcho(e) {
+      s.issue('echo', e ? 'on' : 'off');
+    }
     t.setCommandEcho = setCommandEcho;
     function setFailed(e) {
       process.exitCode = a.Failure;
-      error(e)
+      error(e);
     }
     t.setFailed = setFailed;
-    function isDebug() { return process.env["RUNNER_DEBUG"] === "1" }
+    function isDebug() {
+      return process.env['RUNNER_DEBUG'] === '1';
+    }
     t.isDebug = isDebug;
-    function debug(e) { s.issueCommand("debug", {}, e) }
+    function debug(e) {
+      s.issueCommand('debug', {}, e);
+    }
     t.debug = debug;
     function error(e) {
-      s.issue("error", e instanceof Error ? e.toString() : e)
+      s.issue('error', e instanceof Error ? e.toString() : e);
     }
     t.error = error;
     function warning(e) {
-      s.issue("warning", e instanceof Error ? e.toString() : e)
+      s.issue('warning', e instanceof Error ? e.toString() : e);
     }
     t.warning = warning;
-    function info(e) { process.stdout.write(e + i.EOL) }
+    function info(e) {
+      process.stdout.write(e + i.EOL);
+    }
     t.info = info;
-    function startGroup(e) { s.issue("group", e) }
+    function startGroup(e) {
+      s.issue('group', e);
+    }
     t.startGroup = startGroup;
-    function endGroup() { s.issue("endgroup") }
+    function endGroup() {
+      s.issue('endgroup');
+    }
     t.endGroup = endGroup;
     function group(e, t) {
-      return r(this, void 0, void 0, function*() {
+      return r(this, void 0, void 0, function* () {
         startGroup(e);
         let n;
         try {
-          n = yield t()
+          n = yield t();
         } finally {
-          endGroup()
+          endGroup();
         }
-        return n
-      })
+        return n;
+      });
     }
     t.group = group;
-    function saveState(e, t) { s.issueCommand("save-state", {name : e}, t) }
+    function saveState(e, t) {
+      s.issueCommand('save-state', { name: e }, t);
+    }
     t.saveState = saveState;
-    function getState(e) { return process.env[`STATE_${e}`] || "" }
-    t.getState = getState
+    function getState(e) {
+      return process.env[`STATE_${e}`] || '';
+    }
+    t.getState = getState;
   },
-  543 : function(e, t, n) {
+  543: function (e, t, n) {
     const r = n(669);
     const o = r.promisify(n(129).exec);
     const s = async (e, t) => {
-      return new Promise(function(n, r) {
-        const {debug : s} = t || {};
+      return new Promise(function (n, r) {
+        const { debug: s } = t || {};
         o(e, (t, o, i) => {
-          if (s)
-            console.log(`\nCommand: ${e}\n\t${o}\n\t${i}`);
-          if (t)
-            r(t);
-          n((o || i).slice(0, -1))
-        })
-      })
+          if (s) console.log(`\nCommand: ${e}\n\t${o}\n\t${i}`);
+          if (t) r(t);
+          n((o || i).slice(0, -1));
+        });
+      });
     };
-    const i = async e => {
-      const {version : t, remote_driver : n = "all"} = e;
+    const i = async (e) => {
+      const { version: t, remote_driver: n = 'all' } = e;
       try {
         console.log(`Uninstalling previous DVC`);
-        await s(`pip uninstall -y dvc`)
-      } catch (e) {
-      }
+        await s(`pip uninstall -y dvc`);
+      } catch (e) {}
       console.log(`Installing DVC version ${t} with remote ${n}`);
-      await s(`yes | pip install dvc[${n}]${t !== "latest" ? `==${t}` : ""}`)
+      await s(`yes | pip install dvc[${n}]${t !== 'latest' ? `==${t}` : ''}`);
     };
     t.exec = s;
-    t.setup_dvc = i
+    t.setup_dvc = i;
   },
-  614 : function(e, t, n) {
+  614: function (e, t, n) {
     const r = n(470);
-    const {setup_dvc : o} = n(543);
+    const { setup_dvc: o } = n(543);
     (async () => {
       try {
-        const e = r.getInput("version");
-        const t = r.getInput("remote_driver");
-        await o({version : e, remote_driver : t})
+        const e = r.getInput('version');
+        const t = r.getInput('remote_driver');
+        await o({ version: e, remote_driver: t });
       } catch (e) {
-        r.setFailed(e.message)
+        r.setFailed(e.message);
       }
-    })()
+    })();
   },
-  622 : function(e) { e.exports = require("path") },
-  669 : function(e) { e.exports = require("util") }
+  622: function (e) {
+    e.exports = require('path');
+  },
+  669: function (e) {
+    e.exports = require('util');
+  }
 });
