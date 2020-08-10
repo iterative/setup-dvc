@@ -1,0 +1,39 @@
+name: "Check DVC GitHub Action"
+
+on: [push]
+
+jobs:
+  check:
+    runs-on: [ubuntu-latest]
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "npm ci"
+      run: npm ci
+
+    - name: "lint"
+      run: npm run lint
+
+    - name: "tests"
+      run: |
+        npm run test
+
+    - uses: iterative/dvc
+      with:
+        version: '1.0.0'
+
+    - name: "DVC test"
+      run: |
+        DVC_VER=$(dvc --version)
+        if [ $DVC_VER != '1.0.0' ]; then
+          return 1
+        fi
+
+    - uses: iterative/dvc
+      with:
+        version: latest
+      
+    - name: "CML test"
+      run: |
+        dvc version
