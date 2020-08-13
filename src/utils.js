@@ -26,26 +26,28 @@ const setup_dvc = async opts => {
     sudo = await exec('which sudo');
   } catch (err) {}
 
-  if (platform === 'linux');
-  console.log(
-    await exec(`${sudo} wget https://dvc.org/deb/dvc.list -O /etc/apt/sources.list.d/dvc.list && \
-      ${sudo} apt update && \
-      ${sudo} apt -y install dvc${version !== 'latest' ? `=${version}` : ''}`)
-  );
+  if (platform === 'linux')
+    console.log(
+      await exec(`${sudo} wget https://dvc.org/deb/dvc.list -O /etc/apt/sources.list.d/dvc.list && \
+        ${sudo} apt update && \
+        ${sudo} apt -y install dvc${version !== 'latest' ? `=${version}` : ''}`)
+    );
 
-  if (platform === 'darwin');
-  console.log(
-    await exec(
-      `${sudo} brew install dvc${version !== 'latest' ? `@${version}` : ''}`
-    )
-  );
+  if (platform === 'darwin')
+    console.log(
+      await exec(
+        `${sudo} brew install dvc${version !== 'latest' ? `@${version}` : ''}`
+      )
+    );
 
-  if (platform === 'win32');
-  console.log(
-    await exec(
-      `choco install dvc${version !== 'latest' ? ` --version ${version}` : ''}`
-    )
-  );
+  if (platform === 'win32')
+    console.log(
+      await exec(
+        `choco install dvc${
+          version !== 'latest' ? ` --version ${version}` : ''
+        }`
+      )
+    );
 };
 
 exports.exec = exec;
