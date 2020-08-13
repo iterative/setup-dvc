@@ -26,7 +26,7 @@ jobs:
       with:
         python-version: '3.x'
 
-    - uses: iterative/dvc-action@v1
+    - uses: iterative/dvc-action@v1.0.1
       with:
         version: '1.0.0'
 
@@ -35,10 +35,10 @@ jobs:
         dvc version
         DVC_VER=$(dvc --version)
         if [ $DVC_VER != '1.0.0' ]; then
-          return 1
+          exit 1
         fi
 
-    - uses: iterative/dvc-action@v1
+    - uses: iterative/dvc-action@v1.0.1
       with:
         version: latest
       
@@ -47,6 +47,5 @@ jobs:
         dvc version
         DVC_VER=$(dvc --version)
         if [ $DVC_VER == '1.0.0' ]; then
-          return 1
+          exit 1
         fi
-

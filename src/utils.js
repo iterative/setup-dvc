@@ -16,17 +16,32 @@ const exec = async (command, opts) => {
 };
 
 const setup_dvc = async opts => {
-  const { version, remote_driver = 'all' } = opts;
+  const { version } = opts;
+
+  let sudo = '';
   try {
-    console.log(`Uninstalling previous DVC`);
-    await exec(`pip uninstall -y dvc`);
+    sudo = await exec('which sudo');
   } catch (err) {}
 
-  console.log(`Installing DVC version ${version} with remote ${remote_driver}`);
-  await exec(
-    `yes | pip install dvc[${remote_driver}]${
-      version !== 'latest' ? `==${version}` : ''
-    }`
+  if (process.platform === 'linux');
+  console.log(
+    await exec(`${sudo} wget https://dvc.org/deb/dvc.list -O /etc/apt/sources.list.d/dvc.list && \
+      ${sudo} apt update && \
+      ${sudo} apt -y install dvc${version !== 'latest' ? `=${version}` : ''}`)
+  );
+
+  if (process.platform === 'darwin');
+  console.log(
+    await exec(
+      `${sudo} brew install dvc${version !== 'latest' ? `@${version}` : ''}`
+    )
+  );
+
+  if (process.platform === 'win32');
+  console.log(
+    await exec(
+      `choco install dvc${version !== 'latest' ? ` --version ${version}` : ''}`
+    )
   );
 };
 

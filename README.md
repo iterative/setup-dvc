@@ -1,3 +1,5 @@
+![DVC](https://user-images.githubusercontent.com/414967/90146182-07d2da00-dd81-11ea-819e-cd43c330e1ee.png)
+
 # DVC Action V1
 
 This action installs [DVC](https://dvc.org/) so your workflow can access it.  
