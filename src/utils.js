@@ -19,8 +19,6 @@ const setup_dvc = async opts => {
   const { version } = opts;
   const { platform } = process;
 
-  console.log(platform);
-
   let sudo = '';
   try {
     sudo = await exec('which sudo');
@@ -35,9 +33,7 @@ const setup_dvc = async opts => {
 
   if (platform === 'darwin')
     console.log(
-      await exec(
-        `${sudo} brew install dvc${version !== 'latest' ? `@${version}` : ''}`
-      )
+      await exec(`brew install dvc${version !== 'latest' ? `@${version}` : ''}`)
     );
 
   if (platform === 'win32')
