@@ -6,7 +6,7 @@ jobs:
   check:
     strategy:
       matrix:
-        runs-on: [macos-latest]
+        runs-on: [windows-latest]
     runs-on: ${{ matrix.runs-on }}
 
     steps:
