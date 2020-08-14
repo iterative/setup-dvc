@@ -39,7 +39,7 @@ const setup_dvc = async opts => {
 
     console.log(
       await exec(
-        `${sudo} wget -O 'dvc.deb' 'https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb' && \
+        `${sudo} curl 'https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb' --output 'dvc.deb'  && \
       ${sudo} dpkg -i 'dvc.deb' && \
       ${sudo} rm -f 'dvc.deb'`
       )

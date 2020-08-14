@@ -20,6 +20,11 @@ jobs:
       with:
         node-version: '12'
 
+    - uses: actions/setup-python@v2
+      if: "contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
+      with:
+        python-version: '3.x'
+
     - name: "npm ci"
       run: npm ci
 
