@@ -22,10 +22,6 @@ jobs:
       run: |
         npm run test
 
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
     - uses: iterative/dvc-action@v1.0.1
       with:
         version: '1.0.1'
