@@ -28,6 +28,7 @@ jobs:
 
     - name: "DVC test"
       run: |
+        python --version
         dvc version
         DVC_VER=$(dvc --version)
         if [ $DVC_VER != '1.0.1' ]; then
