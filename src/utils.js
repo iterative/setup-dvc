@@ -1,4 +1,5 @@
 const util = require('util');
+const fetch = require('node-fetch');
 
 const execp = util.promisify(require('child_process').exec);
 const exec = async (command, opts) => {
@@ -15,9 +16,20 @@ const exec = async (command, opts) => {
   });
 };
 
+const get_latest_version = async () => {
+  const endpoint = 'https://api.github.com/repos/iterative/dvc/releases/latest';
+  const response = await fetch(endpoint, { method: 'GET' });
+  const { tag_name } = await response.json();
+
+  return tag_name;
+};
+
 const setup_dvc = async opts => {
-  const { version } = opts;
   const { platform } = process;
+  let { version = 'latest' } = opts;
+  if (version === 'latest') {
+    version = await get_latest_version();
+  }
 
   if (platform === 'linux') {
     let sudo = '';
@@ -45,11 +57,11 @@ const setup_dvc = async opts => {
   }
 
   if (platform === 'win32') {
-    await exec(`$WebClient = New-Object System.Net.WebClient`);
-    await exec(
-      `$WebClient.DownloadFile("https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe","dvc.exe")`
+    console.log(
+      await exec(
+        `pip install --upgrade dvc${version !== 'latest' ? `==${version}` : ''}`
+      )
     );
-    await exec('Start-Process .\\dvc.exe /S -NoNewWindow -Wait -PassThru');
   }
 };
 

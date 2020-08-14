@@ -6,7 +6,7 @@ jobs:
   check:
     strategy:
       matrix:
-        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+        runs-on: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.runs-on }}
 
     steps:
@@ -28,21 +28,18 @@ jobs:
 
     - name: "DVC test"
       run: |
-        python --version
-        dvc version
         DVC_VER=$(dvc --version)
         if [ $DVC_VER != '1.0.1' ]; then
           exit 1
         fi
 
-    # - uses: iterative/dvc-action@v1.0.1
-    #   with:
-    #     version: latest
+    - uses: iterative/dvc-action@v1.0.1
+      with:
+        version: latest
       
-    # - name: "DVC test"
-    #   run: |
-    #     dvc version
-    #     DVC_VER=$(dvc --version)
-    #     if [ $DVC_VER == '1.0.1' ]; then
-    #       exit 1
-    #     fi
+    - name: "DVC test"
+      run: |
+        DVC_VER=$(dvc --version)
+        if [ $DVC_VER == '1.0.1' ]; then
+          exit 1
+        fi
