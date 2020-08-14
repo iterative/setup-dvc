@@ -28,7 +28,9 @@ const setup_dvc = async opts => {
     console.log(
       await exec(`${sudo} wget https://dvc.org/deb/dvc.list -O /etc/apt/sources.list.d/dvc.list && \
         ${sudo} apt update && \
-        ${sudo} apt -y install dvc${version !== 'latest' ? `=${version}` : ''}`)
+        ${sudo} apt -y --allow-downgrades install dvc${
+        version !== 'latest' ? `=${version}` : ''
+      }`)
     );
 
   if (platform === 'darwin' || platform === 'win32')
