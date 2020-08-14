@@ -1,4 +1,5 @@
 const util = require('util');
+const fs = require('fs');
 const fetch = require('node-fetch');
 
 const execp = util.promisify(require('child_process').exec);
@@ -12,6 +13,20 @@ const exec = async (command, opts) => {
       if (error) reject(error);
 
       resolve((stdout || stderr).slice(0, -1));
+    });
+  });
+};
+
+const download = async (url, path) => {
+  const res = await fetch(url);
+  const fileStream = fs.createWriteStream(path);
+  await new Promise((resolve, reject) => {
+    res.body.pipe(fileStream);
+    res.body.on('error', err => {
+      reject(err);
+    });
+    fileStream.on('finish', function() {
+      resolve();
     });
   });
 };
@@ -37,22 +52,22 @@ const setup_dvc = async opts => {
       sudo = await exec('which sudo');
     } catch (err) {}
 
+    await download(
+      `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`,
+      'dvc.deb'
+    );
     console.log(
-      await exec(
-        `${sudo} curl 'https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb' --output 'dvc.deb'  && \
-      ${sudo} dpkg -i 'dvc.deb' && \
-      ${sudo} rm -f 'dvc.deb'`
-      )
+      await exec(`${sudo} dpkg -i 'dvc.deb' && ${sudo} rm -f 'dvc.deb'`)
     );
   }
 
   if (platform === 'darwin') {
+    await download(
+      `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
+      'dvc.pkg'
+    );
     console.log(
-      await exec(
-        `wget -O "dvc.pkg" 'https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg' && \
-        sudo installer -pkg "dvc.pkg" -target / && \
-        rm -f "dvc.pkg"`
-      )
+      await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
     );
   }
 
