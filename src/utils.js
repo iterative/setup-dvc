@@ -31,18 +31,9 @@ const setup_dvc = async opts => {
         ${sudo} apt -y install dvc${version !== 'latest' ? `=${version}` : ''}`)
     );
 
-  if (platform === 'darwin')
+  if (platform === 'darwin' || platform === 'win32')
     console.log(
-      await exec(`brew install dvc${version !== 'latest' ? `@${version}` : ''}`)
-    );
-
-  if (platform === 'win32')
-    console.log(
-      await exec(
-        `choco install dvc${
-          version !== 'latest' ? ` --version ${version}` : ''
-        }`
-      )
+      await exec(`pip install dvc${version !== 'latest' ? `==${version}` : ''}`)
     );
 };
 
