@@ -27,7 +27,7 @@ const setup_dvc = async opts => {
 
     console.log(
       await exec(
-        `${sudo} wget -O 'dvc.deb' 'https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.deb' && \
+        `${sudo} wget -O 'dvc.deb' 'https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb' && \
       ${sudo} dpkg -i 'dvc.deb' && \
       ${sudo} rm -f 'dvc.deb'`
       )
@@ -48,7 +48,7 @@ const setup_dvc = async opts => {
   await exec(
     `$WebClient.DownloadFile("https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe","dvc.exe")`
   );
-  await exec(`Start-Process .\\dvc.exe /S -NoNewWindow -Wait -PassThru`);
+  await exec('Start-Process .\\dvc.exe /S -NoNewWindow -Wait -PassThru');
 };
 
 exports.exec = exec;
