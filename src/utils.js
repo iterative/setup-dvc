@@ -19,12 +19,12 @@ const setup_dvc = async opts => {
   const { version } = opts;
   const { platform } = process;
 
-  let sudo = '';
-  try {
-    sudo = await exec('which sudo');
-  } catch (err) {}
+  if (platform === 'linux') {
+    let sudo = '';
+    try {
+      sudo = await exec('which sudo');
+    } catch (err) {}
 
-  if (platform === 'linux')
     console.log(
       await exec(`${sudo} wget https://dvc.org/deb/dvc.list -O /etc/apt/sources.list.d/dvc.list && \
         ${sudo} apt update && \
@@ -32,13 +32,10 @@ const setup_dvc = async opts => {
         version !== 'latest' ? `=${version}` : ''
       }`)
     );
+  }
 
   if (platform === 'darwin' || platform === 'win32')
-    console.log(
-      await exec(
-        `pip install --upgrade dvc${version !== 'latest' ? `==${version}` : ''}`
-      )
-    );
+    console.log(await exec(`brew install dvc`));
 };
 
 exports.exec = exec;
