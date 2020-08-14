@@ -36,7 +36,10 @@ const setup_dvc = async opts => {
 
   if (platform === 'darwin' || platform === 'win32')
     console.log(
-      await exec(`brew update && brew install python3.8 && brew install dvc`)
+      // await exec(`brew update && brew install python3.8 && brew install dvc`)
+      await exec(
+        `wget -O "dvc.pkg" 'https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg' && sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`
+      )
     );
 };
 
