@@ -26,21 +26,29 @@ const setup_dvc = async opts => {
     } catch (err) {}
 
     console.log(
-      await exec(`${sudo} wget https://dvc.org/deb/dvc.list -O /etc/apt/sources.list.d/dvc.list && \
-        ${sudo} apt update && \
-        ${sudo} apt -y --allow-downgrades install dvc${
-        version !== 'latest' ? `=${version}` : ''
-      }`)
+      await exec(
+        `${sudo} wget -O 'dvc.deb' 'https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.deb' && \
+      ${sudo} dpkg -i 'dvc.deb' && \
+      ${sudo} rm -f 'dvc.deb'`
+      )
     );
   }
 
-  if (platform === 'darwin' || platform === 'win32')
+  if (platform === 'darwin')
     console.log(
-      // await exec(`brew update && brew install python3.8 && brew install dvc`)
       await exec(
-        `wget -O "dvc.pkg" 'https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg' && sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`
+        `wget -O "dvc.pkg" 'https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg' && \
+        sudo installer -pkg "dvc.pkg" -target / && \
+        rm -f "dvc.pkg"`
       )
     );
+
+  if (platform === 'win32')
+    await exec(`$WebClient = New-Object System.Net.WebClient`);
+  await exec(
+    `$WebClient.DownloadFile("https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe","dvc.exe")`
+  );
+  await exec(`Start-Process .\\dvc.exe /S -NoNewWindow -Wait -PassThru`);
 };
 
 exports.exec = exec;
