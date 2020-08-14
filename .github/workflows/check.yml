@@ -28,18 +28,6 @@ jobs:
 
     - uses: iterative/dvc-action@v1.0.1
       with:
-        version: '1.0.1'
-
-    - name: "DVC test"
-      run: |
-        dvc version
-        DVC_VER=$(dvc --version)
-        if [ $DVC_VER != '1.0.1' ]; then
-          exit 1
-        fi
-
-    - uses: iterative/dvc-action@v1.0.1
-      with:
         version: latest
       
     - name: "DVC test"
@@ -49,3 +37,16 @@ jobs:
         if [ $DVC_VER == '1.0.1' ]; then
           exit 1
         fi
+
+    - uses: iterative/dvc-action@v1.0.1
+      with:
+        version: '1.0.1'
+
+    - name: "DVC test"
+      run: |
+        dvc version
+        DVC_VER=$(dvc --version)
+        if [ $DVC_VER != '1.0.1' ]; then
+          exit 1
+        fi
+  
