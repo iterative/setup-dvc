@@ -34,7 +34,7 @@ const setup_dvc = async opts => {
     );
   }
 
-  if (platform === 'darwin')
+  if (platform === 'darwin') {
     console.log(
       await exec(
         `wget -O "dvc.pkg" 'https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg' && \
@@ -42,6 +42,7 @@ const setup_dvc = async opts => {
         rm -f "dvc.pkg"`
       )
     );
+  }
 
   if (platform === 'win32') {
     await exec(`$WebClient = New-Object System.Net.WebClient`);
