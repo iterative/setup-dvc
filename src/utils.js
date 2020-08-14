@@ -35,7 +35,9 @@ const setup_dvc = async opts => {
   }
 
   if (platform === 'darwin' || platform === 'win32')
-    console.log(await exec(`brew updatet && brew install dvc`));
+    console.log(
+      await exec(`brew update && brew install python3.8 && brew install dvc`)
+    );
 };
 
 exports.exec = exec;
