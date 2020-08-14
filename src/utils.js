@@ -43,12 +43,13 @@ const setup_dvc = async opts => {
       )
     );
 
-  if (platform === 'win32')
+  if (platform === 'win32') {
     await exec(`$WebClient = New-Object System.Net.WebClient`);
-  await exec(
-    `$WebClient.DownloadFile("https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe","dvc.exe")`
-  );
-  await exec('Start-Process .\\dvc.exe /S -NoNewWindow -Wait -PassThru');
+    await exec(
+      `$WebClient.DownloadFile("https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe","dvc.exe")`
+    );
+    await exec('Start-Process .\\dvc.exe /S -NoNewWindow -Wait -PassThru');
+  }
 };
 
 exports.exec = exec;
