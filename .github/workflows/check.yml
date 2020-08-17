@@ -35,7 +35,7 @@ jobs:
       run: |
         npm run test
 
-    - uses: iterative/dvc-action@v1.0.1
+    - uses: iterative/setup-dvc@v1.0.1
       with:
         version: '1.0.1'
 
@@ -46,7 +46,7 @@ jobs:
           exit 1
         fi
 
-    - uses: iterative/dvc-action@v1.0.1
+    - uses: iterative/setup-dvc@v1.0.1
       with:
         version: latest
       

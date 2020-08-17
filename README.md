@@ -23,7 +23,7 @@ Basic:
 steps:
   - uses: actions/checkout@v2
 
-  - uses: iterative/dvc-action@v1
+  - uses: iterative/setup-dvc@v1
 ```
 
 Windows:
@@ -36,7 +36,7 @@ steps:
     with:
       python-version: '3.x'
 
-  - uses: iterative/dvc-action@v1
+  - uses: iterative/setup-dvc@v1
 ```
 
 A specific version can be pinned to your workflow.
@@ -45,7 +45,7 @@ A specific version can be pinned to your workflow.
 steps:
   - uses: actions/checkout@v2
 
-  - uses: iterative/dvc-action@v1
+  - uses: iterative/setup-dvc@v1
     with:
       version: '1.0.1'
 ```
