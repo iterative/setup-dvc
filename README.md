@@ -24,8 +24,6 @@ steps:
   - uses: actions/checkout@v2
 
   - uses: iterative/dvc-action@v1
-
-  - run: dvc version
 ```
 
 Windows:
@@ -39,8 +37,6 @@ steps:
       python-version: '3.x'
 
   - uses: iterative/dvc-action@v1
-
-  - run: dvc version
 ```
 
 A specific version can be pinned to your workflow.
@@ -52,8 +48,6 @@ steps:
   - uses: iterative/dvc-action@v1
     with:
       version: '1.0.1'
-
-  - run: dvc version
 ```
 
 ## Inputs
