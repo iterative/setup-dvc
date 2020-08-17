@@ -1,4 +1,4 @@
-name: 'DVC (Data Version Control)'
+name: 'Setup DVC (Data Version Control)'
 description: 'Sets up DVC (Data Version Control) in your GitHub Actions workflow.'
 author: 'Iterative, Inc.'
 inputs:
