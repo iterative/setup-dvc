@@ -8,7 +8,9 @@ jobs:
       matrix:
         runs-on: [ '{"runs-on": "ubuntu-latest"}', 
           '{"runs-on": "macos-latest"}', 
-          '{"runs-on": "ubuntu-latest", "container": "ubuntu:18.04"}' ]
+          '{"runs-on": "ubuntu-latest", "container": "ubuntu:18.04"}',
+          '{"runs-on": "windows-latest"}']
+          
     runs-on: ${{ fromJSON(matrix.runs-on).runs-on }}
     container: ${{ fromJSON(matrix.runs-on).container }} 
 
