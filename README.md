@@ -1,4 +1,4 @@
-# Setup DVC Action V1
+# Setup DVC Action
 
 ![DVC](https://user-images.githubusercontent.com/414967/90413385-a8d9d180-e0ae-11ea-9ed7-a9155a3b48f0.png)
 
