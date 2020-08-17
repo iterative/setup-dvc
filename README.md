@@ -16,9 +16,6 @@ workflow. It installs the specified version by `version` action input parameter.
 This action can be run on `ubuntu-latest`, `macos-latest` and `windows-latest`.
 When running on windows-latest python3 is needed in order to set up the action.
 
-It accepts as input the version of DVC that you want to install, being `latest`
-by default.
-
 Basic:
 
 ```yaml
