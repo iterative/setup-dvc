@@ -10,7 +10,7 @@ jobs:
           '{"runs-on": "macos-latest"}', 
           '{"runs-on": "ubuntu-latest", "container": "ubuntu:18.04"}',
           '{"runs-on": "windows-latest"}']
-          
+
     runs-on: ${{ fromJSON(matrix.runs-on).runs-on }}
     container: ${{ fromJSON(matrix.runs-on).container }} 
 
@@ -42,6 +42,7 @@ jobs:
         version: '1.0.1'
 
     - name: "DVC test"
+      if: "!contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
       run: |
         DVC_VER=$(dvc --version)
         if [ $DVC_VER != '1.0.1' ]; then
@@ -53,6 +54,7 @@ jobs:
         version: latest
       
     - name: "DVC test"
+      if: "!contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
       run: |
         DVC_VER=$(dvc --version)
         if [ $DVC_VER == '1.0.1' ]; then
