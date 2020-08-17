@@ -74,7 +74,9 @@ const setup_dvc = async opts => {
   if (platform === 'win32') {
     console.log(
       await exec(
-        `pip install --upgrade dvc${version !== 'latest' ? `==${version}` : ''}`
+        `pip install --upgrade dvc[all]${
+          version !== 'latest' ? `==${version}` : ''
+        }`
       )
     );
   }
