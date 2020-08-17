@@ -2,10 +2,10 @@
 
 ![DVC](https://user-images.githubusercontent.com/414967/90413385-a8d9d180-e0ae-11ea-9ed7-a9155a3b48f0.png)
 
-DVC is an open-source Version Control System for Machine Learning Projects.
-[DVC](https://dvc.org/) is built to make ML models shareable and reproducible.
-It is designed to handle large files, data sets, machine learning models, and
-metrics as well as code.
+[DVC](https://dvc.org/) is an open-source Version Control System for Machine
+Learning Projects. [DVC](https://dvc.org/) is built to make ML models shareable
+and reproducible. It is designed to handle large files, data sets, machine
+learning models, and metrics as well as code.
 
 The [iterative/setup-dvc](https://github.com/iterative/setup-dvc) action is a
 JavaScript action that sets up [DVC](https://dvc.org/) in your GitHub Actions
