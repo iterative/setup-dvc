@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 
 const execp = util.promisify(require('child_process').exec);
 const exec = async (command, opts) => {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     const { debug } = opts || {};
 
     execp(command, (error, stdout, stderr) => {
@@ -25,7 +25,7 @@ const download = async (url, path) => {
     res.body.on('error', err => {
       reject(err);
     });
-    fileStream.on('finish', function () {
+    fileStream.on('finish', function() {
       resolve();
     });
   });

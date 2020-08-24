@@ -2,7 +2,5 @@ restylers:
   - name: prettier
     arguments: ['--write']
     include:
-      - 'src/**/*.js'
-      - 'bin/**/*.js'
       - 'assets/*.json'
       - './**/*.{yaml,yml,md,json}'
