@@ -1,16 +1,16 @@
 {
-  "name": "@dvcorg/dvc-action",
+  "name": "@dvcorg/setup-dvc",
   "version": "1.0.0",
   "author": {
     "name": "DVC",
-    "url": "https://github.com/iterative/dvc-action"
+    "url": "https://github.com/iterative/setup-dvc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iterative/dvc-action.git"
+    "url": "git+https://github.com/iterative/setup-dvc.git"
   },
   "bugs": {
-    "url": "https://github.com/iterative/dvc-action/issues"
+    "url": "https://github.com/iterative/setup-dvc/issues"
   },
   "keywords": [
     "dvc",

@@ -1,0 +1,6 @@
+restylers:
+  - name: prettier
+    arguments: ['--write']
+    include:
+      - 'assets/*.json'
+      - './**/*.{yaml,yml,md,json}'

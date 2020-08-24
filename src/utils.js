@@ -1,4 +1,6 @@
 const util = require('util');
+const fs = require('fs');
+const fetch = require('node-fetch');
 
 const execp = util.promisify(require('child_process').exec);
 const exec = async (command, opts) => {
@@ -15,19 +17,69 @@ const exec = async (command, opts) => {
   });
 };
 
-const setup_dvc = async opts => {
-  const { version, remote_driver = 'all' } = opts;
-  try {
-    console.log(`Uninstalling previous DVC`);
-    await exec(`pip uninstall -y dvc`);
-  } catch (err) {}
+const download = async (url, path) => {
+  const res = await fetch(url);
+  const fileStream = fs.createWriteStream(path);
+  await new Promise((resolve, reject) => {
+    res.body.pipe(fileStream);
+    res.body.on('error', err => {
+      reject(err);
+    });
+    fileStream.on('finish', function() {
+      resolve();
+    });
+  });
+};
 
-  console.log(`Installing DVC version ${version} with remote ${remote_driver}`);
-  await exec(
-    `yes | pip install dvc[${remote_driver}]${
-      version !== 'latest' ? `==${version}` : ''
-    }`
-  );
+const get_latest_version = async () => {
+  const endpoint = 'https://api.github.com/repos/iterative/dvc/releases/latest';
+  const response = await fetch(endpoint, { method: 'GET' });
+  const { tag_name } = await response.json();
+
+  return tag_name;
+};
+
+const setup_dvc = async opts => {
+  const { platform } = process;
+  let { version = 'latest' } = opts;
+  if (version === 'latest') {
+    version = await get_latest_version();
+  }
+
+  if (platform === 'linux') {
+    let sudo = '';
+    try {
+      sudo = await exec('which sudo');
+    } catch (err) {}
+
+    await download(
+      `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`,
+      'dvc.deb'
+    );
+    console.log(
+      await exec(`${sudo} dpkg -i 'dvc.deb' && ${sudo} rm -f 'dvc.deb'`)
+    );
+  }
+
+  if (platform === 'darwin') {
+    await download(
+      `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
+      'dvc.pkg'
+    );
+    console.log(
+      await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
+    );
+  }
+
+  if (platform === 'win32') {
+    console.log(
+      await exec(
+        `pip install --upgrade dvc[all]${
+          version !== 'latest' ? `==${version}` : ''
+        }`
+      )
+    );
+  }
 };
 
 exports.exec = exec;

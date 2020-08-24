@@ -6,11 +6,26 @@ jobs:
   check:
     strategy:
       matrix:
-        runs-on: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.runs-on }}
+        runs-on: [ '{"runs-on": "ubuntu-latest"}', 
+          '{"runs-on": "macos-latest"}', 
+          '{"runs-on": "ubuntu-latest", "container": "ubuntu:18.04"}',
+          '{"runs-on": "windows-latest"}']
+
+    runs-on: ${{ fromJSON(matrix.runs-on).runs-on }}
+    container: ${{ fromJSON(matrix.runs-on).container }} 
 
     steps:
     - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v1
+      if: "fromJSON(matrix.runs-on).container == 'ubuntu:18.04'"
+      with:
+        node-version: '12'
+
+    - uses: actions/setup-python@v2
+      if: "contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
+      with:
+        python-version: '3.x'
 
     - name: "npm ci"
       run: npm ci
@@ -22,31 +37,26 @@ jobs:
       run: |
         npm run test
 
-    - uses: actions/setup-python@v2
+    - uses: iterative/setup-dvc@v1
       with:
-        python-version: '3.x'
-
-    - uses: iterative/dvc-action@v1
-      with:
-        version: '1.0.0'
+        version: '1.0.1'
 
     - name: "DVC test"
+      if: "!contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
       run: |
-        dvc version
         DVC_VER=$(dvc --version)
-        if [ $DVC_VER != '1.0.0' ]; then
-          return 1
+        if [ $DVC_VER != '1.0.1' ]; then
+          exit 1
         fi
 
-    - uses: iterative/dvc-action@v1
+    - uses: iterative/setup-dvc@v1
       with:
         version: latest
       
     - name: "DVC test"
+      if: "!contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
       run: |
-        dvc version
         DVC_VER=$(dvc --version)
-        if [ $DVC_VER == '1.0.0' ]; then
-          return 1
+        if [ $DVC_VER == '1.0.1' ]; then
+          exit 1
         fi
-
