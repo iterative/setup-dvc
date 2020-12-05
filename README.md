@@ -60,3 +60,5 @@ The following inputs are supported.
 ## Outputs
 
 Setup DVC has no outputs.
+
+## Environmental variables
