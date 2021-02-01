@@ -17,37 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: actions/setup-node@v1
-      if: "fromJSON(matrix.runs-on).container == 'ubuntu:18.04'"
-      with:
-        node-version: '12'
-
     - uses: actions/setup-python@v2
-      if: "contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
       with:
         python-version: '3.x'
-
-    - name: "npm ci"
-      run: npm ci
-
-    - name: "lint"
-      run: npm run lint
-
-    - name: "tests"
-      run: |
-        npm run test
-
-    - uses: iterative/setup-dvc@test-dvc
-      with:
-        version: '1.0.1'
-
-    - name: "DVC test"
-      if: "!contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
-      run: |
-        DVC_VER=$(dvc --version)
-        if [ $DVC_VER != '1.0.1' ]; then
-          exit 1
-        fi
 
     - uses: iterative/setup-dvc@test-dvc
 
