@@ -50,9 +50,7 @@ jobs:
         fi
 
     - uses: iterative/setup-dvc@test-dvc
-      with:
-        version: latest
-      
+
     - name: "DVC test"
       if: "!contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
       run: |
