@@ -57,6 +57,7 @@ jobs:
       if: "!contains(fromJSON(matrix.runs-on).runs-on, 'windows')"
       run: |
         DVC_VER=$(dvc --version)
+        
         if [ $DVC_VER == '1.0.1' ]; then
           exit 1
         fi
