@@ -42,10 +42,9 @@ const get_latest_version = async () => {
 const setup_dvc = async opts => {
   const { platform } = process;
   let { version = 'latest' } = opts;
-  throw new Error('VERSION IS ' + version);
-  console.log('VERSION IS ' + version);
   if (version === 'latest') {
     version = await get_latest_version();
+    throw new Error('VERSION IS ' + version);
   }
 
   if (platform === 'linux') {
