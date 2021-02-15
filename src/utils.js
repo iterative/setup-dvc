@@ -60,7 +60,7 @@ const setup_dvc = async opts => {
     );
     console.log(
       await exec(
-        `${sudo} apt update && apt install git && ${sudo} dpkg -i 'dvc.deb' && ${sudo} rm -f 'dvc.deb'`
+        `(${sudo} dpkg -l 'dvc.deb' || echo 'dvc ready to install') && ${sudo} apt-get -f install && ${sudo} rm -f 'dvc.deb'`
       )
     );
   }
