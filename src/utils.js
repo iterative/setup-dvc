@@ -46,6 +46,8 @@ const setup_dvc = async opts => {
     version = await get_latest_version();
   }
 
+  console.log('VERSION IS ' + version);
+
   if (platform === 'linux') {
     let sudo = '';
     try {
@@ -56,10 +58,9 @@ const setup_dvc = async opts => {
       `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`,
       'dvc.deb'
     );
-
     console.log(
       await exec(
-        `${sudo} wget https://dvc.org/deb/dvc.list -O /etc/apt/sources.list.d/dvc.list && ${sudo} apt update && ${sudo} apt install dvc`
+        `(${sudo} dpkg -i 'dvc.deb' || echo 'dvc ready to install') && ${sudo} apt-get -f install && ${sudo} rm -f 'dvc.deb'`
       )
     );
   }
