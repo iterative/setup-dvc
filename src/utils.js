@@ -46,8 +46,6 @@ const setup_dvc = async opts => {
     version = await get_latest_version();
   }
 
-  console.log('VERSION IS ' + version);
-
   if (platform === 'linux') {
     let sudo = '';
     try {
