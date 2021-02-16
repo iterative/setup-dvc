@@ -46,8 +46,6 @@ const setup_dvc = async opts => {
     version = await get_latest_version();
   }
 
-  console.log('VERSION IS ' + version);
-
   if (platform === 'linux') {
     let sudo = '';
     try {
@@ -60,7 +58,7 @@ const setup_dvc = async opts => {
     );
     console.log(
       await exec(
-        `(${sudo} dpkg -i 'dvc.deb' || echo 'dvc ready to install') && ${sudo} apt-get -f -y install && ${sudo} rm -f 'dvc.deb'`
+        `dpkg -i 'dvc.deb' && ${sudo} apt-get -f -y install && ${sudo} rm -f 'dvc.deb'`
       )
     );
   }
