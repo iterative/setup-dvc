@@ -52,9 +52,13 @@ const setup_dvc = async opts => {
       sudo = await exec('which sudo');
     } catch (err) {}
 
+    await download(
+      `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`,
+      'dvc.deb'
+    );
     console.log(
       await exec(
-        `${sudo} apt update && ${sudo} apt install -y ./dvc_${version}_amd64.deb && ${sudo} rm -f 'dvc.deb'`
+        `${sudo} apt update && ${sudo} apt install dvc.deb ${sudo} && ${sudo} rm -f 'dvc.deb'`
       )
     );
   }
