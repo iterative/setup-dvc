@@ -2,22 +2,21 @@
 
 ![DVC](https://user-images.githubusercontent.com/414967/90413385-a8d9d180-e0ae-11ea-9ed7-a9155a3b48f0.png)
 
-[DVC](https://dvc.org/) is an open-source Version Control System for Machine
-Learning Projects. [DVC](https://dvc.org/) is built to make ML models shareable
-and reproducible. It is designed to handle large files, data sets, machine
-learning models, and metrics as well as code.
+Data version control ([DVC](https://dvc.org/)) is open-source, Git version control for machine learning projects. Benefits include:
+- Reproducible and shareable machine learning models and pipelines
+- Git version large datasets and models without Git-LFS
+- Git diffs for model and data metrics across commits, tags and branches
 
 The [iterative/setup-dvc](https://github.com/iterative/setup-dvc) action is a
-JavaScript action that sets up [DVC](https://dvc.org/) in your GitHub Actions
-workflow. It installs the specified version by `version` action input parameter.
+JavaScript action that sets up [DVC](https://dvc.org/) in your
+workflow. 
 
 ## Usage
 
 This action can be run on `ubuntu-latest`, `macos-latest`, `windows-latest`.
-When running on `windows-latest` python3 is needed in order to set up the
-action.
+When running on `windows-latest`, Python 3 is a dependency that should be setup first (and [there's an action for that](https://github.com/actions/setup-python)).
 
-Basic:
+Basic usage:
 
 ```yaml
 steps:
@@ -39,7 +38,7 @@ steps:
   - uses: iterative/setup-dvc@v1
 ```
 
-A specific version can be pinned to your workflow.
+A specific version can be pinned to your workflow using the `version` argument.
 
 ```yaml
 steps:
