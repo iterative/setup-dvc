@@ -1,14 +1,14 @@
-name: 'Setup DVC (Data Version Control)'
-description: 'Sets up DVC (Data Version Control) in your GitHub Actions workflow.'
-author: 'Iterative, Inc.'
-inputs:
-  version:
-    description: 'The version of DVC to install. A value of `latest` will install the latest version of DVC. Defaults to `latest`.'
-    default: 'latest'
-    required: false
+name: Setup DVC
+author: Iterative, Inc.
+description: An action to automatically setup DVC
 runs:
   using: 'node12'
   main: 'dist/index.js'
 branding:
-  icon: 'terminal'
-  color: 'purple'
+  icon: 'arrow-down'
+  color: 'green'
+inputs:
+  version:
+    description: The version of DVC to install
+    required: false
+    default: 'latest'

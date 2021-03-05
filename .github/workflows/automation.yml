@@ -1,0 +1,104 @@
+name: automation
+
+on:
+  pull_request:
+  release:
+    types: [published, edited]
+  push:
+      branches:
+          - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build action code
+        run: |
+          npm run all
+
+      - name: Store action code
+        uses: actions/upload-artifact@v2
+        with:
+          name: built-action
+          path: ./dist
+
+  test:
+    needs: build
+    runs-on: ${{ matrix.system }}
+    strategy:
+      matrix:
+        system:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        version:
+          - latest
+          - 1.0.1
+
+    steps:
+      - name: Install Python
+        uses: actions/setup-python@v2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Retrieve action code
+        uses: actions/download-artifact@v2
+        with:
+          name: built-action
+          path: ./dist
+
+      - name: Run local action
+        uses: ./
+        with:
+          version: ${{ matrix.version }}
+
+      - name: Test local action
+        shell: bash
+        run: |
+          dvc --help
+          [[ "$VERSION" == "latest" ]] || [[ "$(dvc --version)" == "$VERSION" ]]
+        env:
+          VERSION: ${{ matrix.version }}
+
+  commit:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Retrieve action code
+        uses: actions/download-artifact@v2
+        with:
+          name: built-action
+          path: ./dist
+
+      - name: Commit action code
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: 'Update compiled code'
+          add: ./dist
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    steps:
+      - name: Tag action release
+        uses: Actions-R-Us/actions-tagger@v2
+        env:
+          GITHUB_TOKEN: "${{ github.token }}"
+        with:
+          publish_latest_tag: true

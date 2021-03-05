@@ -2,60 +2,59 @@
 
 ![DVC](https://user-images.githubusercontent.com/414967/90413385-a8d9d180-e0ae-11ea-9ed7-a9155a3b48f0.png)
 
-Data version control ([DVC](https://dvc.org/)) is open-source, Git version control for machine learning projects. Benefits include:
-- Reproducible and shareable machine learning models and pipelines
-- Git version large datasets and models without Git-LFS
-- Git diffs for model and data metrics across commits, tags and branches
+The [`iterative/setup-dvc`](https://github.com/iterative/setup-dvc) action is a
+TypeScript action that sets up [DVC](https://dvc.org/) in your workflow.
 
-The [iterative/setup-dvc](https://github.com/iterative/setup-dvc) action is a
-JavaScript action that sets up [DVC](https://dvc.org/) in your
-workflow. 
+**Data Version Control** or **DVC** is an **open-source** tool for data science
+and machine learning projects.
+
+#### Key features
+
+1. Simple **command line** Git-like experience. Does not require installing and
+   maintaining any databases. Does not depend on any proprietary online
+   services.
+
+2. Management and versioning of **datasets** and **machine learning models**.
+   Data is saved in S3, Google cloud, Azure, Alibaba cloud, SSH server, HDFS, or
+   even local HDD RAID.
+
+3. Makes projects **reproducible** and **shareable**; helping to answer
+   questions about how a model was built.
+
+4. Helps manage experiments with Git tags/branches and **metrics** tracking.
+
+**DVC** aims to replace spreadsheet and document sharing tools (such as Excel or
+Google Docs) which are being used frequently as both knowledge repositories and
+team ledgers. DVC also replaces both ad-hoc scripts to track, move, and deploy
+different model versions; as well as ad-hoc data file suffixes and prefixes.
 
 ## Usage
 
-This action can be run on `ubuntu-latest`, `macos-latest`, `windows-latest`.
-When running on `windows-latest`, Python 3 is a dependency that should be setup first (and [there's an action for that](https://github.com/actions/setup-python)).
+This action can be run on `ubuntu-latest`, `macos-latest` and `windows-latest`.
 
-Basic usage:
-
-```yaml
-steps:
-  - uses: actions/checkout@v2
-
-  - uses: iterative/setup-dvc@v1
-```
-
-Windows:
+#### Basic usage
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
-
   - uses: actions/setup-python@v2
-    with:
-      python-version: '3.x'
-
-  - uses: iterative/setup-dvc@v1
+  - uses: iterative/setup-dvc@v2
+  - run: dvc --help
 ```
 
-A specific version can be pinned to your workflow using the `version` argument.
+#### Version pinning
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
-
-  - uses: iterative/setup-dvc@v1
+  - uses: actions/setup-python@v2
+  - uses: iterative/setup-dvc@v2
     with:
       version: '1.0.1'
 ```
 
 ## Inputs
 
-The following inputs are supported.
-
-- `version` - (optional) The version of DVC to install. A value of `latest` will
-  install the latest version of DVC. Defaults to `latest`.
+- **`version`** _(optional)_ The version of DVC to install; defaults to **latest**.
 
 ## Outputs
 
-Setup DVC has no outputs.
+This action has no outputs.

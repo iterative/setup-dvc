@@ -1,9 +1,15 @@
 {
   "name": "@dvcorg/setup-dvc",
-  "version": "1.0.0",
-  "author": {
-    "name": "DVC",
-    "url": "https://github.com/iterative/setup-dvc"
+  "version": "2.0.0",
+  "description": "Data version control (DVC) is an open-source data version control system for machine learning projects.",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build --source-map --license licenses.txt",
+    "all": "npm run build && npm run format && npm run lint && npm run package"
   },
   "repository": {
     "type": "git",
@@ -13,9 +19,14 @@
     "url": "https://github.com/iterative/setup-dvc/issues"
   },
   "keywords": [
+    "actions",
     "dvc",
-    "github action"
+    "setup"
   ],
+  "author": {
+    "name": "Iterative, Inc.",
+    "url": "https://iterative.ai"
+  },
   "license": "Apache-2.0",
   "licenses": [
     {
@@ -23,44 +34,27 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     }
   ],
-  "main": "dist/index.js",
-  "scripts": {
-    "lintfix": "eslint --fix ./",
-    "lint": "eslint ./",
-    "test": "jest --passWithNoTests",
-    "do_snapshots": "jest --updateSnapshot",
-    "build": "ncc build src/github-action.js -o dist -m"
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/exec": "^1.0.4",
+    "hasbin": "^1.2.3"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && npm run build && git add dist/index.js"
+      "pre-commit": "npm run all && git add ./dist"
     }
   },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix"
-    ],
-    "*.md": [
-      "prettier --write"
-    ]
-  },
-  "dependencies": {
-    "@actions/core": "^1.2.4",
-    "@actions/github": "^2.2.0"
-  },
   "devDependencies": {
-    "@zeit/ncc": "^0.20.5",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
+    "@types/hasbin": "^1.2.0",
+    "@types/node": "^14.14.9",
+    "@typescript-eslint/parser": "^4.8.1",
+    "@vercel/ncc": "^0.25.1",
+    "eslint": "^7.17.0",
+    "eslint-plugin-github": "^4.1.1",
+    "eslint-plugin-jest": "^24.1.3",
     "husky": "^4.2.3",
-    "jest": "^24.9.0",
-    "lint-staged": "^10.0.8",
-    "prettier": "^1.19.1"
+    "js-yaml": "^3.14.0",
+    "prettier": "2.2.1",
+    "typescript": "^4.1.3"
   }
 }
