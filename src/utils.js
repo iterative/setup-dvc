@@ -31,7 +31,7 @@ const download = async (url, path) => {
   });
 };
 
-const get_latest_version = async () => {
+const getLatestVersion = async () => {
   const endpoint = 'https://updater.dvc.org';
   const response = await fetch(endpoint, { method: 'GET' });
   const { version } = await response.json();
@@ -39,11 +39,11 @@ const get_latest_version = async () => {
   return version;
 };
 
-const setup_dvc = async opts => {
+const setupDVC = async opts => {
   const { platform } = process;
   let { version = 'latest' } = opts;
   if (version === 'latest') {
-    version = await get_latest_version();
+    version = await getLatestVersion();
   }
 
   if (platform === 'linux') {
@@ -85,4 +85,4 @@ const setup_dvc = async opts => {
 };
 
 exports.exec = exec;
-exports.setup_dvc = setup_dvc;
+exports.setupDVC = setupDVC;
