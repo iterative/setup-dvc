@@ -11,8 +11,8 @@ jobs:
         include:
           - system: ubuntu-18.04
             container: ubuntu:18.04    
-    runs-on: matrix.system
-    container: matrix.container
+    runs-on: ${{ matrix.system }}
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
