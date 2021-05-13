@@ -1,26 +1,34 @@
 name: Check DVC GitHub Action
-on: [push]
+on: [push, workflow_dispatch]
 jobs:
   check:
     strategy:
       matrix:
-        os:
-          [
-            '{"runs-on": "ubuntu-latest"}',
-            '{"runs-on": "macos-latest"}',
-            '{"runs-on": "ubuntu-latest", "container": "ubuntu:18.04"}',
-            '{"runs-on": "windows-latest"}',
-          ]
-    runs-on: ${{ fromJSON(matrix.os).runs-on }}
-    container: ${{ fromJSON(matrix.os).container }}
+        system:
+          - ubuntu
+          - ubuntu-container
+          - macos
+          - windows
+        include:
+          - system: ubuntu
+            runs-on: ubuntu-latest
+          - system: ubuntu-container
+            runs-on: ubuntu-latest
+            container: ubuntu:18.04
+          - system: macos
+            runs-on: macos-latest
+          - system: windows
+            runs-on: windows-latest       
+    runs-on: matrix.runs-on
+    container: matrix.container
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-        if: "fromJSON(matrix.os).container == 'ubuntu:18.04'"
+        if: matrix.container == 'ubuntu:18.04'
         with:
           node-version: '12'
       - uses: actions/setup-python@v2
-        if: "contains(fromJSON(matrix.os).runs-on, 'windows')"
+        if: matrix.runs-on != 'windows'
         with:
           python-version: '3.x'
       - run: npm ci
@@ -31,7 +39,7 @@ jobs:
         with:
           version: '1.0.1'
       - name: test DVC version
-        if: "!contains(fromJSON(matrix.os).runs-on, 'windows')"
+        if: matrix.runs-on != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER != '1.0.1' ]; then
@@ -42,7 +50,7 @@ jobs:
         with:
           version: latest
       - name: test DVC version
-        if: "!contains(fromJSON(matrix.os).runs-on, 'windows')"
+        if: matrix.runs-on != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER == '1.0.1' ]; then
