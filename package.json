@@ -14,7 +14,9 @@
   },
   "keywords": [
     "dvc",
-    "github action"
+    "data version control",
+    "github action",
+    "github actions"
   ],
   "license": "Apache-2.0",
   "licenses": [
