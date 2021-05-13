@@ -38,7 +38,7 @@ jobs:
             exit 1
           fi
       - name: run local action with 'latest'
-        uses: ./.github/..
+        uses: ./
         with:
           version: latest
       - name: test DVC version
