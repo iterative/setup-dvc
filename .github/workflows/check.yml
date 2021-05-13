@@ -2,6 +2,9 @@ name: Check DVC GitHub Action
 on: [push]
 jobs:
   check:
+    defaults:
+      run:
+        shell: bash
     strategy:
       matrix:
         system:
@@ -10,12 +13,12 @@ jobs:
           - windows-latest
         include:
           - system: ubuntu-18.04
-            container: ubuntu:18.04    
+            container: ubuntu:18.04
     runs-on: ${{ matrix.system }}
     container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         if: matrix.container == 'ubuntu:18.04'
         with:
           node-version: '12'
@@ -31,7 +34,6 @@ jobs:
         with:
           version: '1.0.1'
       - name: test DVC specific version
-        if: matrix.system != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER != '1.0.1' ]; then
@@ -40,7 +42,6 @@ jobs:
       - name: local action with defaults
         uses: ./
       - name: test DVC latest version
-        if: matrix.system != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER == '1.0.1' ]; then
