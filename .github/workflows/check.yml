@@ -5,21 +5,13 @@ jobs:
     strategy:
       matrix:
         system:
-          - ubuntu
-          - ubuntu-container
-          - macos
-          - windows
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
         include:
-          - system: ubuntu
-            runs-on: ubuntu-latest
-          - system: ubuntu-container
-            runs-on: ubuntu-latest
-            container: ubuntu:18.04
-          - system: macos
-            runs-on: macos-latest
-          - system: windows
-            runs-on: windows-latest       
-    runs-on: matrix.runs-on
+          - system: ubuntu-18.04
+            container: ubuntu:18.04    
+    runs-on: matrix.system
     container: matrix.container
     steps:
       - uses: actions/checkout@v2
@@ -28,18 +20,18 @@ jobs:
         with:
           node-version: '12'
       - uses: actions/setup-python@v2
-        if: matrix.runs-on != 'windows'
+        if: matrix.system != 'windows'
         with:
           python-version: '3.x'
       - run: npm ci
       - run: npm run lint
       - run: npm run test
       - name: run local action with '1.0.1'
-        uses: ./.github/..
+        uses: ./
         with:
           version: '1.0.1'
       - name: test DVC version
-        if: matrix.runs-on != 'windows'
+        if: matrix.system != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER != '1.0.1' ]; then
@@ -50,7 +42,7 @@ jobs:
         with:
           version: latest
       - name: test DVC version
-        if: matrix.runs-on != 'windows'
+        if: matrix.system != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER == '1.0.1' ]; then
