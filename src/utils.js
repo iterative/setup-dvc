@@ -32,11 +32,11 @@ const download = async (url, path) => {
 };
 
 const get_latest_version = async () => {
-  const endpoint = 'https://api.github.com/repos/iterative/dvc/releases/latest';
+  const endpoint = 'https://updater.dvc.org';
   const response = await fetch(endpoint, { method: 'GET' });
-  const { tag_name } = await response.json();
+  const { version } = await response.json();
 
-  return tag_name;
+  return version;
 };
 
 const setup_dvc = async opts => {
@@ -57,7 +57,9 @@ const setup_dvc = async opts => {
       'dvc.deb'
     );
     console.log(
-      await exec(`${sudo} dpkg -i 'dvc.deb' && ${sudo} rm -f 'dvc.deb'`)
+      await exec(
+        `${sudo} apt update && ${sudo} apt install -y git ./dvc.deb && ${sudo} rm -f 'dvc.deb'`
+      )
     );
   }
 
