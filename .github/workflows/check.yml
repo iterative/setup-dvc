@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '12'
       - uses: actions/setup-python@v2
-        if: matrix.system != 'windows'
+        if: matrix.system == 'windows'
         with:
           python-version: '3.x'
       - run: npm ci
