@@ -4,23 +4,23 @@ jobs:
   check:
     strategy:
       matrix:
-        os:
-          [
-            '{"runs-on": "ubuntu-latest"}',
-            '{"runs-on": "macos-latest"}',
-            '{"runs-on": "ubuntu-latest", "container": "ubuntu:18.04"}',
-            '{"runs-on": "windows-latest"}',
-          ]
-    runs-on: ${{ fromJSON(matrix.os).runs-on }}
-    container: ${{ fromJSON(matrix.os).container }}
+        system:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        include:
+          - system: ubuntu-18.04
+            container: ubuntu:18.04    
+    runs-on: matrix.system
+    container: matrix.container
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-        if: "fromJSON(matrix.os).container == 'ubuntu:18.04'"
+        if: matrix.container == 'ubuntu:18.04'
         with:
           node-version: '12'
       - uses: actions/setup-python@v2
-        if: "contains(fromJSON(matrix.os).runs-on, 'windows')"
+        if: matrix.system == 'windows'
         with:
           python-version: '3.x'
       - run: npm ci
@@ -31,7 +31,7 @@ jobs:
         with:
           version: '1.0.1'
       - name: test DVC specific version
-        if: "!contains(fromJSON(matrix.os).runs-on, 'windows')"
+        if: matrix.system != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER != '1.0.1' ]; then
@@ -40,7 +40,7 @@ jobs:
       - name: local action with defaults
         uses: ./
       - name: test DVC latest version
-        if: "!contains(fromJSON(matrix.os).runs-on, 'windows')"
+        if: matrix.system != 'windows'
         run: |
           DVC_VER=$(dvc --version)
           if [ $DVC_VER == '1.0.1' ]; then
