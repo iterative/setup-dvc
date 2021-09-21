@@ -47,22 +47,22 @@
     ]
   },
   "dependencies": {
-    "@actions/core": "^1.2.6",
+    "@actions/core": "^1.5.0",
     "@actions/github": "^2.2.0"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20.5",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-prettier": "^6.15.0",
     "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "husky": "^4.2.3",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^4.1.0",
+    "husky": "^4.3.8",
     "jest": "^24.9.0",
-    "lint-staged": "^10.0.8",
+    "lint-staged": "^10.5.4",
     "prettier": "^1.19.1"
   }
 }
