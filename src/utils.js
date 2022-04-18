@@ -32,11 +32,11 @@ const download = async (url, path) => {
 };
 
 const getLatestVersion = async () => {
-  const endpoint = 'https://updater.dvc.org';
+  const endpoint = 'https://api.github.com/repos/iterative/dvc/releases/latest';
   const response = await fetch(endpoint, { method: 'GET' });
-  const { version } = await response.json();
+  const { tag_name } = await response.json();
 
-  return version;
+  return tag_name;
 };
 
 const setupDVC = async opts => {
