@@ -32,14 +32,14 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
-      - name: local action with '1.0.1'
+      - name: local action with '2.18.0'
         uses: ./
         with:
-          version: '1.0.1'
+          version: '2.18.0'
       - name: test DVC specific version
         run: |
           DVC_VER=$(dvc --version)
-          if [ $DVC_VER != '1.0.1' ]; then
+          if [ $DVC_VER != '2.18.0' ]; then
             exit 1
           fi
       - name: local action with defaults
@@ -47,6 +47,6 @@ jobs:
       - name: test DVC latest version
         run: |
           DVC_VER=$(dvc --version)
-          if [ $DVC_VER == '1.0.1' ]; then
+          if [ $DVC_VER == '2.18.0' ]; then
             exit 1
           fi
