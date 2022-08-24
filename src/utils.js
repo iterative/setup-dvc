@@ -58,7 +58,7 @@ const setupDVC = async opts => {
     );
     console.log(
       await exec(
-        `${sudo} apt update && ${sudo} apt install -y git ./dvc.deb && ${sudo} rm -f 'dvc.deb'`
+        `${sudo} apt update && ${sudo} apt install -y --allow-downgrades git ./dvc.deb && ${sudo} rm -f 'dvc.deb'`
       )
     );
   }
