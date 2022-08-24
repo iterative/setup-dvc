@@ -53,7 +53,7 @@ const setupDVC = async opts => {
     } catch (err) {}
 
     await download(
-      `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`,
+      `https://dvc.org/download/linux-deb/dvc-${version}`,
       'dvc.deb'
     );
     console.log(
@@ -64,10 +64,7 @@ const setupDVC = async opts => {
   }
 
   if (platform === 'darwin') {
-    await download(
-      `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
-      'dvc.pkg'
-    );
+    await download(`https://dvc.org/download/osx/dvc-${version}`, 'dvc.pkg');
     console.log(
       await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
     );
