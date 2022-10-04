@@ -4,6 +4,14 @@ on:
     - cron: 0 0 * * *
   pull_request:
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          npm ci
+          npm run build
+          git diff --exit-code
   check:
     defaults:
       run:
@@ -24,7 +32,7 @@ jobs:
       - uses: actions/setup-node@v2
         if: matrix.container == 'ubuntu:18.04'
         with:
-          node-version: '12'
+          node-version: '16'
       - uses: actions/setup-python@v2
         if: matrix.system == 'windows'
         with:
