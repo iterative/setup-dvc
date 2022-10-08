@@ -21,6 +21,7 @@ const download = async (url, path) => {
   const res = await fetch(url);
   const fileStream = fs.createWriteStream(path);
   await new Promise((resolve, reject) => {
+    if (res.status !== 200) return reject(new Error(res.statusText));
     console.log(res.status);
     console.log(res);
     res.body.pipe(fileStream);
