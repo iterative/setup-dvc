@@ -74,6 +74,7 @@ const setupDVC = async opts => {
     try {
       console.log('1 attempt');
       await download(`https://dvc.org/download/osx/dvc-${version}`, 'dvc.pkg');
+      console.log(await exec('cat dvc.pkg'));
     } catch (err) {
       // fallback to GH releases
       console.log('2 attempt');
