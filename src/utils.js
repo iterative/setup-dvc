@@ -71,7 +71,15 @@ const setupDVC = async opts => {
   }
 
   if (platform === 'darwin') {
-    await download(`https://dvc.org/download/osx/dvc-${version}`, 'dvc.pkg');
+    try {
+      await download(`https://dvc.org/download/osx/dvc-${version}`, 'dvc.pkg');
+    } catch (err) {
+      // fallback to GH releases
+      await download(
+        `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
+        'dvc.pkg'
+      );
+    }
     console.log(
       await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
     );
