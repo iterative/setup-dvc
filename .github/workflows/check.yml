@@ -29,7 +29,7 @@ jobs:
         include:
           - system: ubuntu-18.04
             container: ubuntu:18.04
-            version: ${{ matrix.version }}
+            version: ['1.0.1', '2.18.1']
     runs-on: ${{ matrix.system }}
     container: ${{ matrix.container }}
     steps:
