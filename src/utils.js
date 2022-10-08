@@ -72,9 +72,11 @@ const setupDVC = async opts => {
 
   if (platform === 'darwin') {
     try {
+      console.log('1 attempt');
       await download(`https://dvc.org/download/osx/dvc-${version}`, 'dvc.pkg');
     } catch (err) {
       // fallback to GH releases
+      console.log('2 attempt');
       await download(
         `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
         'dvc.pkg'
