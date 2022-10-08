@@ -1,7 +1,7 @@
 name: Check DVC GitHub Action
 on:
   schedule:
-    - cron: 0 0 * * *
+    - cron: '0 0 * * *' # everyday @ 0000 UTC
   pull_request:
 jobs:
   verify:
@@ -17,7 +17,7 @@ jobs:
       run:
         shell: bash
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         system:
           - ubuntu-latest

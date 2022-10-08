@@ -22,8 +22,6 @@ const download = async (url, path) => {
   const fileStream = fs.createWriteStream(path);
   await new Promise((resolve, reject) => {
     if (res.status !== 200) return reject(new Error(res.statusText));
-    console.log(res.status);
-    console.log(res);
     res.body.pipe(fileStream);
     res.body.on('error', err => {
       reject(err);
@@ -75,12 +73,9 @@ const setupDVC = async opts => {
 
   if (platform === 'darwin') {
     try {
-      console.log('1 attempt');
       await download(`https://dvc.org/download/osx/dvc-${version}`, 'dvc.pkg');
-      console.log(await exec('cat dvc.pkg'));
     } catch (err) {
       // fallback to GH releases
-      console.log('2 attempt');
       await download(
         `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
         'dvc.pkg'
