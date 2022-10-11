@@ -1,7 +1,7 @@
 name: Check DVC GitHub Action
 on:
   schedule:
-    - cron: 0 0 * * *
+    - cron: '0 0 * * *' # everyday @ 0000 UTC
   pull_request:
 jobs:
   verify:
@@ -22,39 +22,40 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
+        version:
+          - '1.0.1'
+          - '2.18.1'
         include:
           - system: ubuntu-18.04
             container: ubuntu:18.04
+            version: '1.0.1'
+          - system: ubuntu-18.04
+            container: ubuntu:18.04
+            version: '2.18.1'
     runs-on: ${{ matrix.system }}
     container: ${{ matrix.container }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         if: matrix.container == 'ubuntu:18.04'
         with:
           node-version: '16'
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v3
         if: matrix.system == 'windows'
         with:
           python-version: '3.x'
       - run: npm ci
       - run: npm run lint
       - run: npm run test
-      - name: local action with '1.0.1'
+      - name: local action with ${{ matrix.version }}
         uses: ./
         with:
-          version: '1.0.1'
+          version: ${{ matrix.version }}
       - name: test DVC specific version
         run: |
-          DVC_VER=$(dvc --version)
-          if [ $DVC_VER != '1.0.1' ]; then
-            exit 1
-          fi
+          test "$(dvc --version)" == "${{ matrix.version}}"
       - name: local action with defaults
         uses: ./
       - name: test DVC latest version
         run: |
-          DVC_VER=$(dvc --version)
-          if [ $DVC_VER == '1.0.1' ]; then
-            exit 1
-          fi
+          test "$(dvc --version)" != "${{ matrix.version}}"

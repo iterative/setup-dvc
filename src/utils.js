@@ -21,6 +21,7 @@ const download = async (url, path) => {
   const res = await fetch(url);
   const fileStream = fs.createWriteStream(path);
   await new Promise((resolve, reject) => {
+    if (res.status !== 200) return reject(new Error(res.statusText));
     res.body.pipe(fileStream);
     res.body.on('error', err => {
       reject(err);
@@ -51,11 +52,16 @@ const setupDVC = async opts => {
     try {
       sudo = await exec('which sudo');
     } catch (err) {}
-
-    await download(
-      `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`,
-      'dvc.deb'
-    );
+    try {
+      const dvcURL = `https://dvc.org/download/linux-deb/dvc-${version}`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.deb');
+    } catch (err) {
+      console.log('DVC Download Failed, trying from GitHub Releases');
+      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.deb');
+    }
     console.log(
       await exec(
         `${sudo} apt update && ${sudo} apt install -y --allow-downgrades git ./dvc.deb && ${sudo} rm -f 'dvc.deb'`
@@ -64,16 +70,23 @@ const setupDVC = async opts => {
   }
 
   if (platform === 'darwin') {
-    await download(
-      `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
-      'dvc.pkg'
-    );
+    try {
+      const dvcURL = `https://dvc.org/download/osx/dvc-${version}`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.pkg');
+    } catch (err) {
+      console.log('DVC Download Failed, trying from GitHub Releases');
+      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.pkg');
+    }
     console.log(
       await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
     );
   }
 
   if (platform === 'win32') {
+    console.log('Installing DVC with pip');
     console.log(
       await exec(
         `pip install --upgrade dvc[all]${
