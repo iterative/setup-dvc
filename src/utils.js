@@ -53,16 +53,14 @@ const setupDVC = async opts => {
       sudo = await exec('which sudo');
     } catch (err) {}
     try {
-      await download(
-        `https://dvc.org/download/linux-deb/dvc-${version}`,
-        'dvc.deb'
-      );
+      const dvcURL = `https://dvc.org/download/linux-deb/dvc-${version}`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.deb');
     } catch (err) {
-      // fallback to GH releases
-      await download(
-        `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`,
-        'dvc.deb'
-      );
+      console.log('DVC Download Failed, trying from GitHub Releases');
+      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.deb');
     }
     console.log(
       await exec(
@@ -73,13 +71,14 @@ const setupDVC = async opts => {
 
   if (platform === 'darwin') {
     try {
-      await download(`https://dvc.org/download/osx/dvc-${version}`, 'dvc.pkg');
+      const dvcURL = `https://dvc.org/download/osx/dvc-${version}`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.pkg');
     } catch (err) {
-      // fallback to GH releases
-      await download(
-        `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`,
-        'dvc.pkg'
-      );
+      console.log('DVC Download Failed, trying from GitHub Releases');
+      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.pkg');
     }
     console.log(
       await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
@@ -87,6 +86,7 @@ const setupDVC = async opts => {
   }
 
   if (platform === 'win32') {
+    console.log('Installing DVC with pip');
     console.log(
       await exec(
         `pip install --upgrade dvc[all]${
