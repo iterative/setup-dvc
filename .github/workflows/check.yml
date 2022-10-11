@@ -53,9 +53,9 @@ jobs:
           version: ${{ matrix.version }}
       - name: test DVC specific version
         run: |
-          test "$(dvc --version)" != "${{ matrix.version}}"
+          test "$(dvc --version)" == "${{ matrix.version}}"
       - name: local action with defaults
         uses: ./
       - name: test DVC latest version
         run: |
-          test "$(dvc --version)" == "${{ matrix.version}}"
+          test "$(dvc --version)" != "${{ matrix.version}}"
