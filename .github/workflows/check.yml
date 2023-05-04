@@ -25,21 +25,9 @@ jobs:
         version:
           - '1.0.1'
           - '2.18.1'
-        include:
-          - system: ubuntu-18.04
-            container: ubuntu:18.04
-            version: '1.0.1'
-          - system: ubuntu-18.04
-            container: ubuntu:18.04
-            version: '2.18.1'
     runs-on: ${{ matrix.system }}
-    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        if: matrix.container == 'ubuntu:18.04'
-        with:
-          node-version: '16'
       - uses: actions/setup-python@v3
         if: matrix.system == 'windows'
         with:
