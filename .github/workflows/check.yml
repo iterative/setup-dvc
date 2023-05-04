@@ -26,7 +26,6 @@ jobs:
           - '1.0.1'
           - '2.18.1'
     runs-on: ${{ matrix.system }}
-    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
