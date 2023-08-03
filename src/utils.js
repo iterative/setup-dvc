@@ -41,13 +41,10 @@ const getLatestVersion = async () => {
 };
 
 const prepGitRepo = async () => {
-  console.log('*** prepGitRepo ***');
   const repo = await exec(`git config --get remote.origin.url`);
-  console.log(`repo: ${repo}`);
   const rawToken = await exec(
     `git config --get "http.https://github.com/.extraheader"`
   );
-  console.log(`rawToken: ${rawToken}`);
   // format of rawToken "AUTHORIZATION: basic ***"
   const [, , token64] = rawToken.split(' ');
   // eC1hY2Nlc3MtdG9rZW46Z2hzX ...
@@ -56,16 +53,13 @@ const prepGitRepo = async () => {
     .split(':')
     .pop();
   // x-access-token:ghs_***
-  console.log(`token: ${token}`);
   const newURL = new URL(repo);
   newURL.password = token;
   newURL.username = 'token';
   const finalURL =
     newURL.toString() + (newURL.toString().endsWith('.git') ? '' : '.git');
-  console.log(`finalURL: ${finalURL}`);
   await exec(`git remote set-url origin "${finalURL}"`);
   await exec(`git config --unset "http.https://github.com/.extraheader"`);
-  console.log('*** prepGitRepo done ***');
 };
 
 const setupDVC = async opts => {
