@@ -58,6 +58,7 @@ const prepGitRepo = async () => {
     newURL.toString() + (newURL.toString().endsWith('.git') ? '' : '.git');
   console.log(`finalURL: ${finalURL}`);
   await exec(`git remote set-url origin "${finalURL}"`);
+  await exec(`git config --unset "http.https://github.com/.extraheader"`);
   console.log('*** prepGitRepo done ***');
 };
 
