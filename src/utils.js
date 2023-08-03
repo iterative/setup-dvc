@@ -49,7 +49,13 @@ const prepGitRepo = async () => {
   );
   console.log(`rawToken: ${rawToken}`);
   // format of rawToken "AUTHORIZATION: basic ***"
-  const [, , token] = rawToken.split(' ');
+  const [, , token64] = rawToken.split(' ');
+  // eC1hY2Nlc3MtdG9rZW46Z2hzX ...
+  const token = Buffer.from(token64, 'base64')
+    .toString('utf-8')
+    .split(':')
+    .pop();
+  // x-access-token:ghs_***
   console.log(`token: ${token}`);
   const newURL = new URL(repo);
   newURL.password = token;
