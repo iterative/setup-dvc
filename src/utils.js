@@ -52,16 +52,9 @@ const setupDVC = async opts => {
     try {
       sudo = await exec('which sudo');
     } catch (err) {}
-    try {
-      const dvcURL = `https://dvc.org/download/linux-deb/dvc-${version}`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.deb');
-    } catch (err) {
-      console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.deb');
-    }
+    const dvcURL = `https://dvc.org/download/linux-deb/dvc-${version}`;
+    console.log(`Installing DVC from: ${dvcURL}`);
+    await download(dvcURL, 'dvc.deb');
     console.log(
       await exec(
         `${sudo} apt update && ${sudo} apt install -y --allow-downgrades git ./dvc.deb && ${sudo} rm -f 'dvc.deb'`
@@ -70,16 +63,9 @@ const setupDVC = async opts => {
   }
 
   if (platform === 'darwin') {
-    try {
-      const dvcURL = `https://dvc.org/download/osx/dvc-${version}`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.pkg');
-    } catch (err) {
-      console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.pkg');
-    }
+    const dvcURL = `https://dvc.org/download/osx/dvc-${version}`;
+    console.log(`Installing DVC from: ${dvcURL}`);
+    await download(dvcURL, 'dvc.pkg');
     console.log(
       await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
     );
