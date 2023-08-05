@@ -40,6 +40,28 @@ const getLatestVersion = async () => {
   return version;
 };
 
+const prepGitRepo = async () => {
+  const repo = await exec(`git config --get remote.origin.url`);
+  const rawToken = await exec(
+    `git config --get "http.https://github.com/.extraheader"`
+  );
+  // format of rawToken "AUTHORIZATION: basic ***"
+  const [, , token64] = rawToken.split(' ');
+  // eC1hY2Nlc3MtdG9rZW46Z2hzX ...
+  const token = Buffer.from(token64, 'base64')
+    .toString('utf-8')
+    .split(':')
+    .pop();
+  // x-access-token:ghs_***
+  const newURL = new URL(repo);
+  newURL.password = token;
+  newURL.username = 'token';
+  const finalURL =
+    newURL.toString() + (newURL.toString().endsWith('.git') ? '' : '.git');
+  await exec(`git remote set-url origin "${finalURL}"`);
+  await exec(`git config --unset "http.https://github.com/.extraheader"`);
+};
+
 const setupDVC = async opts => {
   const { platform } = process;
   let { version = 'latest' } = opts;
@@ -99,3 +121,4 @@ const setupDVC = async opts => {
 
 exports.exec = exec;
 exports.setupDVC = setupDVC;
+exports.prepGitRepo = prepGitRepo;
