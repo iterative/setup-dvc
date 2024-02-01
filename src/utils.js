@@ -35,9 +35,14 @@ const download = async (url, path) => {
 const getLatestVersion = async () => {
   const endpoint = 'https://updater.dvc.org';
   const response = await fetch(endpoint, { method: 'GET' });
-  const { version } = await response.json();
-
-  return version;
+  if (response.ok) {
+    const { version } = await response.json();
+    return version;
+  } else {
+    const status = `Status: ${response.status} ${response.statusText}`;
+    const body = `Body:\n${await response.text()}`;
+    throw new Error(`${status}\n${body}`);
+  }
 };
 
 const prepGitRepo = async () => {
