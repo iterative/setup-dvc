@@ -1,7 +1,7 @@
 name: Check DVC GitHub Action
 on:
   schedule:
-    - cron: '0 0 * * *' # daily at 00:00 UTC
+    - cron: '0 0 * * *' # everyday @ 0000 UTC
   pull_request:
 jobs:
   verify:
