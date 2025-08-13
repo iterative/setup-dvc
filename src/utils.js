@@ -1,6 +1,8 @@
 const util = require('util');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const os = require('os');
+const path = require('path');
 
 const execp = util.promisify(require('child_process').exec);
 const exec = async (command, opts) => {
@@ -78,14 +80,38 @@ const commandExists = async command => {
   }
 };
 
+const installUv = async () => {
+  const { platform } = process;
+  if (platform === 'win32') {
+    await exec(
+      'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
+    );
+  } else {
+    await exec('curl -fsSL https://astral.sh/uv/install.sh | sh');
+  }
+};
+
 const pipInstall = async version => {
-  const pkg = `dvc[all]${version === 'latest' ? '' : `==${version}`}`;
-  const hasUv = await commandExists('uv');
+  let hasUv = await commandExists('uv');
+  let uvBin = 'uv';
+  if (!hasUv) {
+    try {
+      await installUv();
+      uvBin = path.join(os.homedir(), '.local', 'bin', 'uv');
+      hasUv = true;
+    } catch (err) {
+      console.log('Failed to install uv');
+    }
+  }
+
+  const pkg = `dvc[azure,gs,hdfs,s3,ssh,webdav,webhdfs]${
+    version === 'latest' ? '' : `==${version}`
+  }`;
+  const installer = hasUv ? `${uvBin} pip` : 'pip';
   const opts = hasUv ? '--system' : '';
-  // TODO: install `uv` if not installed and install dvc using uv
-  const installer = hasUv ? 'uv pip' : 'pip';
+
   console.log(`Installing DVC with ${installer}`);
-  await exec(`${installer} install --upgrade ${pkg} ${opts}`);
+  console.log(await exec(`${installer} install --upgrade ${pkg} ${opts}`));
 };
 
 const setupDVC = async opts => {
