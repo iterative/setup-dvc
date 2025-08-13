@@ -161,6 +161,18 @@ const setupDVC = async opts => {
     return;
   }
 
+  if (platform === 'win32' && arch === 'x64') {
+    const dvcURL = `https://dvc.org/download/win/dvc-${version}`;
+    console.log(`Installing DVC from: ${dvcURL}`);
+    await download(dvcURL, 'dvc.exe');
+    console.log(
+      await exec(
+        `powershell -ExecutionPolicy ByPass -c "Start-Process -FilePath dvc.exe -ArgumentList '/SUPPRESSMSGBOXES /SILENT' -NoNewWindow -Wait"`
+      )
+    );
+    return;
+  }
+
   // Install DVC via pip on other platforms and architectures
   await pipInstall(version);
 };
