@@ -3,6 +3,8 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 const os = require('os');
 const path = require('path');
+const core = require('@actions/core');
+const fsPromises = require('fs/promises');
 
 const execp = util.promisify(require('child_process').exec);
 const exec = async (command, opts) => {
@@ -167,9 +169,11 @@ const setupDVC = async opts => {
     await download(dvcURL, 'dvc.exe');
     console.log(
       await exec(
-        `powershell -ExecutionPolicy ByPass -c "Start-Process -FilePath dvc.exe -ArgumentList '/SUPPRESSMSGBOXES /SILENT' -NoNewWindow -Wait"`
+        `powershell -ExecutionPolicy ByPass -c "Start-Process -FilePath dvc.exe -ArgumentList '/SUPPRESSMSGBOXES /VERYSILENT' -NoNewWindow -Wait`
       )
     );
+    await fsPromises.unlink('dvc.exe');
+    core.addPath('C:\\Program Files (x86)\\DVC (Data Version Control)');
     return;
   }
 
