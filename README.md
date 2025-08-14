@@ -24,15 +24,6 @@ steps:
   - uses: iterative/setup-dvc@v2
 ```
 
-Windows:
-
-```yaml
-steps:
-  - uses: actions/checkout@v5
-
-  - uses: iterative/setup-dvc@v2
-```
-
 A specific version can be pinned to your workflow using the `version` argument.
 
 ```yaml
