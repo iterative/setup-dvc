@@ -22,6 +22,7 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
+          - windows-11-arm
         version:
           - '1.0.1'
           - '2.18.1'

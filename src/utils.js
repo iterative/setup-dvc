@@ -76,7 +76,7 @@ const prepGitRepo = async () => {
 };
 
 const setupDVC = async opts => {
-  const { arch, platform } = process;
+  const { platform } = process;
   let { version = 'latest' } = opts;
   if (version === 'latest') {
     version = await getLatestVersion();
@@ -121,36 +121,25 @@ const setupDVC = async opts => {
   }
 
   if (platform === 'win32') {
-    if (arch === 'x64') {
-      try {
-        const dvcURL = `https://dvc.org/download/win/dvc-${version}`;
-        console.log(`Installing DVC from: ${dvcURL}`);
-        await download(dvcURL, 'dvc.exe');
-      } catch (err) {
-        console.log('DVC Download Failed, trying from GitHub Releases');
-        const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe`;
-        console.log(`Installing DVC from: ${dvcURL}`);
-        await download(dvcURL, 'dvc.exe');
-      }
-      console.log(
-        await exec(
-          `powershell -c "Start-Process -FilePath .\\dvc.exe -ArgumentList '/SP- /NORESTART /SUPPRESSMSGBOXES /VERYSILENT' -NoNewWindow -Wait"`
-        )
-      );
-      await fsPromises.unlink('dvc.exe');
-      const programFilesPath = 'C:\\Program Files (x86)';
-      const installDir = 'DVC (Data Version Control)';
-      core.addPath(path.join(programFilesPath, installDir));
-    } else {
-      console.log('Installing DVC with pip');
-      console.log(
-        await exec(
-          `pip install --upgrade dvc[all]${
-            version !== 'latest' ? `==${version}` : ''
-          }`
-        )
-      );
+    try {
+      const dvcURL = `https://dvc.org/download/win/dvc-${version}`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.exe');
+    } catch (err) {
+      console.log('DVC Download Failed, trying from GitHub Releases');
+      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe`;
+      console.log(`Installing DVC from: ${dvcURL}`);
+      await download(dvcURL, 'dvc.exe');
     }
+    console.log(
+      await exec(
+        `powershell -c "Start-Process -FilePath .\\dvc.exe -ArgumentList '/SP- /NORESTART /SUPPRESSMSGBOXES /VERYSILENT' -NoNewWindow -Wait"`
+      )
+    );
+    await fsPromises.unlink('dvc.exe');
+    const programFilesPath = 'C:\\Program Files (x86)';
+    const installDir = 'DVC (Data Version Control)';
+    core.addPath(path.join(programFilesPath, installDir));
   }
 };
 
