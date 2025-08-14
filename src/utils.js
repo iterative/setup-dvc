@@ -1,6 +1,9 @@
 const util = require('util');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const fsPromises = fs.promises;
+const core = require('@actions/core');
+const path = require('path');
 
 const execp = util.promisify(require('child_process').exec);
 const exec = async (command, opts) => {
@@ -21,9 +24,14 @@ const download = async (url, path) => {
   const res = await fetch(url);
   const fileStream = fs.createWriteStream(path);
   await new Promise((resolve, reject) => {
-    if (res.status !== 200) return reject(new Error(res.statusText));
+    if (res.status !== 200) {
+      fileStream.close();
+      return reject(new Error(res.statusText));
+    }
+
     res.body.pipe(fileStream);
     res.body.on('error', err => {
+      fileStream.close();
       reject(err);
     });
     fileStream.on('finish', function() {
@@ -68,7 +76,7 @@ const prepGitRepo = async () => {
 };
 
 const setupDVC = async opts => {
-  const { platform } = process;
+  const { arch, platform } = process;
   let { version = 'latest' } = opts;
   if (version === 'latest') {
     version = await getLatestVersion();
@@ -113,14 +121,36 @@ const setupDVC = async opts => {
   }
 
   if (platform === 'win32') {
-    console.log('Installing DVC with pip');
-    console.log(
-      await exec(
-        `pip install --upgrade dvc[all]${
-          version !== 'latest' ? `==${version}` : ''
-        }`
-      )
-    );
+    if (arch === 'x64') {
+      try {
+        const dvcURL = `https://dvc.org/download/win/dvc-${version}`;
+        console.log(`Installing DVC from: ${dvcURL}`);
+        await download(dvcURL, 'dvc.exe');
+      } catch (err) {
+        console.log('DVC Download Failed, trying from GitHub Releases');
+        const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe`;
+        console.log(`Installing DVC from: ${dvcURL}`);
+        await download(dvcURL, 'dvc.exe');
+      }
+      console.log(
+        await exec(
+          `powershell -c "Start-Process -FilePath .\\dvc.exe -ArgumentList '/SP- /NORESTART /SUPPRESSMSGBOXES /VERYSILENT' -NoNewWindow -Wait"`
+        )
+      );
+      await fsPromises.unlink('dvc.exe');
+      const programFilesPath = 'C:\\Program Files (x86)';
+      const installDir = 'DVC (Data Version Control)';
+      core.addPath(path.join(programFilesPath, installDir));
+    } else {
+      console.log('Installing DVC with pip');
+      console.log(
+        await exec(
+          `pip install --upgrade dvc[all]${
+            version !== 'latest' ? `==${version}` : ''
+          }`
+        )
+      );
+    }
   }
 };
 
