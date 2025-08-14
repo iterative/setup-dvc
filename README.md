@@ -14,37 +14,32 @@ workflow.
 ## Usage
 
 This action can be run on `ubuntu-latest`, `macos-latest`, `windows-latest`.
-When running on `windows-latest`, Python 3 is a dependency that should be setup first (and [there's an action for that](https://github.com/actions/setup-python)).
 
 Basic usage:
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v5
 
-  - uses: iterative/setup-dvc@v1
+  - uses: iterative/setup-dvc@v2
 ```
 
 Windows:
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v5
 
-  - uses: actions/setup-python@v2
-    with:
-      python-version: '3.x'
-
-  - uses: iterative/setup-dvc@v1
+  - uses: iterative/setup-dvc@v2
 ```
 
 A specific version can be pinned to your workflow using the `version` argument.
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v5
 
-  - uses: iterative/setup-dvc@v1
+  - uses: iterative/setup-dvc@v2
     with:
       version: '1.0.1'
 ```
