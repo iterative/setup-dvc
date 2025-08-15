@@ -75,14 +75,33 @@ const prepGitRepo = async () => {
   await exec(`git config --unset "http.https://github.com/.extraheader"`);
 };
 
+const isUvInstalled = async () => {
+  try {
+    await exec('uv --version');
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+const pipInstall = async version => {
+  const pkg = `dvc[all]${version === 'latest' ? '' : `==${version}`}`;
+  if (await isUvInstalled()) {
+    console.log('Installing DVC with uv');
+    return await exec(`uv tool install ${pkg} --upgrade`);
+  }
+  console.log('Installing DVC with pip');
+  return await exec(`pip install --upgrade ${pkg}`);
+};
+
 const setupDVC = async opts => {
-  const { platform } = process;
+  const { arch, platform } = process;
   let { version = 'latest' } = opts;
   if (version === 'latest') {
     version = await getLatestVersion();
   }
 
-  if (platform === 'linux') {
+  if (platform === 'linux' && arch === 'x64') {
     let sudo = '';
     try {
       sudo = await exec('which sudo');
@@ -102,6 +121,7 @@ const setupDVC = async opts => {
         `${sudo} apt update && ${sudo} apt install -y --allow-downgrades git ./dvc.deb && ${sudo} rm -f 'dvc.deb'`
       )
     );
+    return;
   }
 
   if (platform === 'darwin') {
@@ -118,6 +138,7 @@ const setupDVC = async opts => {
     console.log(
       await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
     );
+    return;
   }
 
   if (platform === 'win32') {
@@ -140,7 +161,10 @@ const setupDVC = async opts => {
     const programFilesPath = 'C:\\Program Files (x86)';
     const installDir = 'DVC (Data Version Control)';
     core.addPath(path.join(programFilesPath, installDir));
+    return;
   }
+  // Install DVC via pip on other platforms and architectures
+  console.log(await pipInstall(version));
 };
 
 exports.exec = exec;
