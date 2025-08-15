@@ -6,8 +6,8 @@ const core = require('@actions/core');
 const path = require('path');
 
 const execp = util.promisify(require('child_process').exec);
-const exec = async (command, opts) => {
-  return new Promise(function(resolve, reject) {
+const exec = async (command, opts) =>
+  new Promise((resolve, reject) => {
     const { debug } = opts || {};
 
     execp(command, (error, stdout, stderr) => {
@@ -18,7 +18,6 @@ const exec = async (command, opts) => {
       resolve((stdout || stderr).slice(0, -1));
     });
   });
-};
 
 const download = async (url, path) => {
   const res = await fetch(url);
@@ -34,7 +33,7 @@ const download = async (url, path) => {
       fileStream.close();
       reject(err);
     });
-    fileStream.on('finish', function() {
+    fileStream.on('finish', () => {
       resolve();
     });
   });
@@ -46,11 +45,10 @@ const getLatestVersion = async () => {
   if (response.ok) {
     const { version } = await response.json();
     return version;
-  } else {
-    const status = `Status: ${response.status} ${response.statusText}`;
-    const body = `Body:\n${await response.text()}`;
-    throw new Error(`${status}\n${body}`);
   }
+  const status = `Status: ${response.status} ${response.statusText}`;
+  const body = `Body:\n${await response.text()}`;
+  throw new Error(`${status}\n${body}`);
 };
 
 const prepGitRepo = async () => {
@@ -58,14 +56,14 @@ const prepGitRepo = async () => {
   const rawToken = await exec(
     `git config --get "http.https://github.com/.extraheader"`
   );
-  // format of rawToken "AUTHORIZATION: basic ***"
+  // Format of rawToken "AUTHORIZATION: basic ***"
   const [, , token64] = rawToken.split(' ');
-  // eC1hY2Nlc3MtdG9rZW46Z2hzX ...
+  // EC1hY2Nlc3MtdG9rZW46Z2hzX ...
   const token = Buffer.from(token64, 'base64')
     .toString('utf-8')
     .split(':')
     .pop();
-  // x-access-token:ghs_***
+  // X-access-token:ghs_***
   const newURL = new URL(repo);
   newURL.password = token;
   newURL.username = 'token';
