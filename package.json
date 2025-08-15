@@ -31,42 +31,25 @@
     "lint": "eslint ./",
     "test": "jest --passWithNoTests",
     "do_snapshots": "jest --updateSnapshot",
-    "build": "ncc build src/github-action.js -o dist -m"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm run build && git add dist/index.js"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix"
-    ],
-    "*.{md,yaml,yml}": [
-      "prettier --write"
-    ]
+    "build": "ncc build src/github-action.js -o dist -m",
+    "all": "npm run lintfix && npm run build && npm test"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^2.2.0",
-    "node-fetch": "^2.6.5"
+    "@actions/core": "^1.11.1",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.34.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "husky": "^8.0.3",
-    "jest": "^29.1.2",
-    "lint-staged": "^13.2.1",
-    "prettier": "^1.19.1"
+    "@vercel/ncc": "^0.38.3",
+    "@eslint/js": "^9.33.0",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.3.0",
+    "jest": "^30.0.5",
+    "neostandard": "^0.12.2",
+    "prettier": "^3.6.2"
   }
 }
