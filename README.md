@@ -32,7 +32,7 @@ steps:
 
   - uses: iterative/setup-dvc@v2
     with:
-      version: '1.0.1'
+      version: '3.62.0'
 ```
 
 ## Inputs
