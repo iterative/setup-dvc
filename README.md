@@ -7,7 +7,7 @@ Data version control ([DVC](https://dvc.org/)) is open-source, Git version contr
 - Git version large datasets and models without Git-LFS
 - Git diffs for model and data metrics across commits, tags and branches
 
-The [iterative/setup-dvc](https://github.com/iterative/setup-dvc) action is a
+The [treeverse/setup-dvc](https://github.com/treeverse/setup-dvc) action is a
 JavaScript action that sets up [DVC](https://dvc.org/) in your
 workflow. 
 
@@ -21,7 +21,7 @@ Basic usage:
 steps:
   - uses: actions/checkout@v5
 
-  - uses: iterative/setup-dvc@v2
+  - uses: treeverse/setup-dvc@v2
 ```
 
 A specific version can be pinned to your workflow using the `version` argument.
@@ -30,7 +30,7 @@ A specific version can be pinned to your workflow using the `version` argument.
 steps:
   - uses: actions/checkout@v5
 
-  - uses: iterative/setup-dvc@v2
+  - uses: treeverse/setup-dvc@v2
     with:
       version: '3.62.0'
 ```

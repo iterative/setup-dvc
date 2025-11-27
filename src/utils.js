@@ -110,7 +110,7 @@ const setupDVC = async opts => {
       await download(dvcURL, 'dvc.deb');
     } catch (err) {
       console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc_${version}_amd64.deb`;
+      const dvcURL = `https://github.com/treeverse/dvc/releases/download/${version}/dvc_${version}_amd64.deb`;
       console.log(`Installing DVC from: ${dvcURL}`);
       await download(dvcURL, 'dvc.deb');
     }
@@ -129,7 +129,7 @@ const setupDVC = async opts => {
       await download(dvcURL, 'dvc.pkg');
     } catch (err) {
       console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.pkg`;
+      const dvcURL = `https://github.com/treeverse/dvc/releases/download/${version}/dvc-${version}.pkg`;
       console.log(`Installing DVC from: ${dvcURL}`);
       await download(dvcURL, 'dvc.pkg');
     }
@@ -146,7 +146,7 @@ const setupDVC = async opts => {
       await download(dvcURL, 'dvc.exe');
     } catch (err) {
       console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/iterative/dvc/releases/download/${version}/dvc-${version}.exe`;
+      const dvcURL = `https://github.com/treeverse/dvc/releases/download/${version}/dvc-${version}.exe`;
       console.log(`Installing DVC from: ${dvcURL}`);
       await download(dvcURL, 'dvc.exe');
     }

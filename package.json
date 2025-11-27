@@ -3,14 +3,14 @@
   "version": "2.0.0",
   "author": {
     "name": "DVC",
-    "url": "https://github.com/iterative/setup-dvc"
+    "url": "https://github.com/treeverse/setup-dvc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iterative/setup-dvc.git"
+    "url": "git+https://github.com/treeverse/setup-dvc.git"
   },
   "bugs": {
-    "url": "https://github.com/iterative/setup-dvc/issues"
+    "url": "https://github.com/treeverse/setup-dvc/issues"
   },
   "keywords": [
     "dvc",
