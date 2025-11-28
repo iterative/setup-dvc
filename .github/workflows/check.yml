@@ -39,6 +39,12 @@ jobs:
     runs-on: ${{ matrix.system }}
     steps:
       - uses: actions/checkout@v5
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
       - uses: astral-sh/setup-uv@v6
         if: matrix.installer == 'uv'
       - run: npm ci

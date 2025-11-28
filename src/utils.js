@@ -1,9 +1,10 @@
 import { promisify } from 'util';
 import { createWriteStream } from 'fs';
 import { unlink } from 'fs/promises';
-import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import path from 'path';
+import { Readable } from 'stream';
+import { finished } from 'stream/promises';
 import { exec as execSync, spawn } from 'child_process';
 
 const execp = promisify(execSync);
@@ -32,24 +33,15 @@ export const execInteractive = async (command, args = []) =>
     });
   });
 
-const download = async (url, path) => {
+export const download = async (url, path) => {
   const res = await fetch(url);
-  const fileStream = createWriteStream(path);
-  await new Promise((resolve, reject) => {
-    if (res.status !== 200) {
-      fileStream.close();
-      return reject(new Error(res.statusText));
-    }
+  if (res.status !== 200) {
+    throw new Error(res.statusText);
+  }
 
-    res.body.pipe(fileStream);
-    res.body.on('error', err => {
-      fileStream.close();
-      reject(err);
-    });
-    fileStream.on('finish', () => {
-      resolve();
-    });
-  });
+  const body = Readable.fromWeb(res.body);
+  const fileStream = createWriteStream(path);
+  await finished(body.pipe(fileStream));
 };
 
 const downloadWithFallback = async (urls, dest) => {
