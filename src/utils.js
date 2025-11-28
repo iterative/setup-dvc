@@ -4,7 +4,7 @@ import { unlink } from 'fs/promises';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import path from 'path';
-import { exec as execSync } from 'child_process';
+import { exec as execSync, spawn } from 'child_process';
 
 const execp = promisify(execSync);
 export const exec = async (command, opts) =>
@@ -17,6 +17,18 @@ export const exec = async (command, opts) =>
       if (error) reject(error);
 
       resolve((stdout || stderr).slice(0, -1));
+    });
+  });
+
+export const execInteractive = async (command, args = []) =>
+  new Promise((resolve, reject) => {
+    const child = spawn(command, args, { stdio: 'inherit', shell: true });
+    child.on('error', reject);
+    child.on('close', code => {
+      if (code !== 0) {
+        return reject(new Error(`Command failed with exit code ${code}`));
+      }
+      resolve(code);
     });
   });
 
@@ -38,6 +50,24 @@ const download = async (url, path) => {
       resolve();
     });
   });
+};
+
+const downloadWithFallback = async (urls, dest) => {
+  if (urls.length === 0) {
+    throw new Error('No URLs provided for download');
+  }
+  let lastError = null;
+  for (const url of urls) {
+    core.debug(`Downloading from ${url}`);
+    try {
+      await download(url, dest);
+      return { source: url };
+    } catch (err) {
+      lastError = err;
+      core.debug(`Download failed: ${err}`);
+    }
+  }
+  throw lastError;
 };
 
 const getLatestVersion = async () => {
@@ -83,14 +113,16 @@ const isUvInstalled = async () => {
   }
 };
 
-const pipInstall = async version => {
+export const installPythonPackage = async version => {
   const pkg = `dvc[all]${version === 'latest' ? '' : `==${version}`}`;
-  if (await isUvInstalled()) {
-    console.log('Installing DVC with uv');
-    return await exec(`uv tool install ${pkg} --upgrade`);
-  }
-  console.log('Installing DVC with pip');
-  return await exec(`pip install --upgrade ${pkg}`);
+  const uvInstalled = await isUvInstalled();
+  const installer = uvInstalled ? 'uv' : 'pip';
+  const installerCmd = uvInstalled
+    ? `uv tool install --upgrade ${pkg}`
+    : `pip install --upgrade ${pkg}`;
+  await core.group(`Installing '${pkg}' using ${installer}`, () =>
+    execInteractive(installerCmd)
+  );
 };
 
 export const setupDVC = async opts => {
@@ -98,6 +130,7 @@ export const setupDVC = async opts => {
   let { version = 'latest' } = opts;
   if (version === 'latest') {
     version = await getLatestVersion();
+    core.debug(`Using latest DVC version: ${version}`);
   }
 
   if (platform === 'linux' && arch === 'x64') {
@@ -105,54 +138,47 @@ export const setupDVC = async opts => {
     try {
       sudo = await exec('which sudo');
     } catch (err) {}
-    try {
-      const dvcURL = `https://dvc.org/download/linux-deb/dvc-${version}`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.deb');
-    } catch (err) {
-      console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/treeverse/dvc/releases/download/${version}/dvc_${version}_amd64.deb`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.deb');
-    }
-    console.log(
-      await exec(
-        `${sudo} apt update && ${sudo} apt install -y --allow-downgrades git ./dvc.deb && ${sudo} rm -f 'dvc.deb'`
+    const { source } = await downloadWithFallback(
+      [
+        `https://dvc.org/download/linux-deb/dvc-${version}`,
+        `https://github.com/treeverse/dvc/releases/download/${version}/dvc_${version}_amd64.deb`
+      ],
+      'dvc.deb'
+    );
+    await core.group(`Installing dvc from ${source}`, () =>
+      execInteractive(
+        `${sudo} apt-get update && ${sudo} apt-get install -y --allow-downgrades git ./dvc.deb`
       )
     );
+    await unlink('dvc.deb');
     return;
   }
 
   if (platform === 'darwin') {
-    try {
-      const dvcURL = `https://dvc.org/download/osx/dvc-${version}`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.pkg');
-    } catch (err) {
-      console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/treeverse/dvc/releases/download/${version}/dvc-${version}.pkg`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.pkg');
-    }
-    console.log(
-      await exec(`sudo installer -pkg "dvc.pkg" -target / && rm -f "dvc.pkg"`)
+    const { source } = await downloadWithFallback(
+      [
+        `https://dvc.org/download/osx/dvc-${version}`,
+        `https://github.com/treeverse/dvc/releases/download/${version}/dvc-${version}.pkg`
+      ],
+      'dvc.pkg'
     );
+    await core.group(`Installing dvc from ${source}`, () =>
+      execInteractive(`sudo installer -pkg "dvc.pkg" -target /`)
+    );
+    await unlink('dvc.pkg');
     return;
   }
 
   if (platform === 'win32') {
-    try {
-      const dvcURL = `https://dvc.org/download/win/dvc-${version}`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.exe');
-    } catch (err) {
-      console.log('DVC Download Failed, trying from GitHub Releases');
-      const dvcURL = `https://github.com/treeverse/dvc/releases/download/${version}/dvc-${version}.exe`;
-      console.log(`Installing DVC from: ${dvcURL}`);
-      await download(dvcURL, 'dvc.exe');
-    }
-    console.log(
-      await exec(
+    const { source } = await downloadWithFallback(
+      [
+        `https://dvc.org/download/win/dvc-${version}`,
+        `https://github.com/treeverse/dvc/releases/download/${version}/dvc-${version}.exe`
+      ],
+      'dvc.exe'
+    );
+    await core.group(`Installing dvc from ${source}`, () =>
+      execInteractive(
         `powershell -c "Start-Process -FilePath .\\dvc.exe -ArgumentList '/SP- /NORESTART /SUPPRESSMSGBOXES /VERYSILENT' -NoNewWindow -Wait"`
       )
     );
@@ -162,6 +188,7 @@ export const setupDVC = async opts => {
     core.addPath(path.join(programFilesPath, installDir));
     return;
   }
+
   // Install DVC via pip on other platforms and architectures
-  console.log(await pipInstall(version));
+  await installPythonPackage(version);
 };
