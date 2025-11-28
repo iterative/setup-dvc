@@ -4,7 +4,7 @@ on:
     - cron: '0 0 * * *' # everyday @ 0000 UTC
   pull_request:
 jobs:
-  verify:
+  verify-dist:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -12,7 +12,7 @@ jobs:
           npm ci
           npm run build
           git diff --exit-code
-  check:
+  test:
     defaults:
       run:
         shell: bash
@@ -58,3 +58,11 @@ jobs:
       - name: test DVC latest version
         run: |
           test "$(dvc --version)" != "${{ matrix.version}}"
+  check:
+    if: always()
+    needs: [verify-dist, test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: re-actors/alls-green@release/v1
+      with:
+        jobs: ${{ toJSON(needs) }}
