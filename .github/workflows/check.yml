@@ -58,6 +58,7 @@ jobs:
       - name: test DVC latest version
         run: |
           test "$(dvc --version)" != "${{ matrix.version}}"
+          test "$(dvc --version)" = "$(curl https://updater.dvc.org | jq -r .version)"
   check:
     if: always()
     needs: [verify-dist, test]
