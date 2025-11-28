@@ -108902,6 +108902,9 @@ const downloadWithFallback = async (urls, dest) => {
     } catch (err) {
       lastError = err;
       coreExports.debug(`Download failed: ${err}`);
+      try {
+        await unlink(dest);
+      } catch (err) {}
     }
   }
   throw lastError;
