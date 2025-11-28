@@ -1,11 +1,10 @@
-/* eslint-disable n/no-unpublished-require */
-const { defineConfig, globalIgnores } = require('eslint/config');
-const globals = require('globals');
-const js = require('@eslint/js');
-const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
-const neostandard = require('neostandard');
+import { defineConfig, globalIgnores } from 'eslint/config';
+import globals from 'globals';
+import js from '@eslint/js';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import neostandard from 'neostandard';
 
-module.exports = defineConfig([
+export default defineConfig([
   {
     languageOptions: {
       globals: {

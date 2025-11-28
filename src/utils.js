@@ -1,12 +1,13 @@
-const util = require('util');
-const fs = require('fs');
-const fetch = require('node-fetch');
-const fsPromises = fs.promises;
-const core = require('@actions/core');
-const path = require('path');
+import { promisify } from 'util';
+import { createWriteStream } from 'fs';
+import { unlink } from 'fs/promises';
+import fetch from 'node-fetch';
+import * as core from '@actions/core';
+import path from 'path';
+import { exec as execSync } from 'child_process';
 
-const execp = util.promisify(require('child_process').exec);
-const exec = async (command, opts) =>
+const execp = promisify(execSync);
+export const exec = async (command, opts) =>
   new Promise((resolve, reject) => {
     const { debug } = opts || {};
 
@@ -21,7 +22,7 @@ const exec = async (command, opts) =>
 
 const download = async (url, path) => {
   const res = await fetch(url);
-  const fileStream = fs.createWriteStream(path);
+  const fileStream = createWriteStream(path);
   await new Promise((resolve, reject) => {
     if (res.status !== 200) {
       fileStream.close();
@@ -51,7 +52,7 @@ const getLatestVersion = async () => {
   throw new Error(`${status}\n${body}`);
 };
 
-const prepGitRepo = async () => {
+export const prepGitRepo = async () => {
   const repo = await exec(`git config --get remote.origin.url`);
   const rawToken = await exec(
     `git config --get "http.https://github.com/.extraheader"`
@@ -92,7 +93,7 @@ const pipInstall = async version => {
   return await exec(`pip install --upgrade ${pkg}`);
 };
 
-const setupDVC = async opts => {
+export const setupDVC = async opts => {
   const { arch, platform } = process;
   let { version = 'latest' } = opts;
   if (version === 'latest') {
@@ -155,7 +156,7 @@ const setupDVC = async opts => {
         `powershell -c "Start-Process -FilePath .\\dvc.exe -ArgumentList '/SP- /NORESTART /SUPPRESSMSGBOXES /VERYSILENT' -NoNewWindow -Wait"`
       )
     );
-    await fsPromises.unlink('dvc.exe');
+    await unlink('dvc.exe');
     const programFilesPath = 'C:\\Program Files (x86)';
     const installDir = 'DVC (Data Version Control)';
     core.addPath(path.join(programFilesPath, installDir));
@@ -164,7 +165,3 @@ const setupDVC = async opts => {
   // Install DVC via pip on other platforms and architectures
   console.log(await pipInstall(version));
 };
-
-exports.exec = exec;
-exports.setupDVC = setupDVC;
-exports.prepGitRepo = prepGitRepo;

@@ -25,13 +25,15 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     }
   ],
+  "type": "module",
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "lintfix": "eslint --fix ./",
     "lint": "eslint ./",
-    "test": "jest --passWithNoTests",
-    "do_snapshots": "jest --updateSnapshot",
-    "build": "ncc build src/github-action.js -o dist -m",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests",
+    "do_snapshots": "node --experimental-vm-modules node_modules/jest/bin/jest.js --updateSnapshot",
+    "build": "rollup --config rollup.config.js",
     "all": "npm run lintfix && npm run build && npm test"
   },
   "engines": {
@@ -42,14 +44,17 @@
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.38.3",
     "@eslint/js": "^9.33.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.3.0",
     "jest": "^30.0.5",
     "neostandard": "^0.12.2",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "rollup": "^4.53.3"
   }
 }
