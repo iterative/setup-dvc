@@ -149,9 +149,7 @@ export const setupDVC = async opts => {
       'dvc.deb'
     );
     await core.group(`Installing dvc from ${source}`, () =>
-      execInteractive(
-        `${sudo} apt-get update && ${sudo} apt-get install -y --allow-downgrades git ./dvc.deb`
-      )
+      execInteractive(`${sudo} apt-get install ./dvc.deb`)
     );
     await unlink('dvc.deb');
     return;
