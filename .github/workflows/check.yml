@@ -24,7 +24,7 @@ jobs:
           - macos-latest
           - windows-latest
           - windows-11-arm
-          - macos-13
+          - macos-15-intel
         version:
           - '1.0.1'
           - '2.18.1'
