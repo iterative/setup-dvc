@@ -55,6 +55,6 @@
     "jest": "^30.2.0",
     "neostandard": "^0.12.2",
     "prettier": "^3.7.1",
-    "rollup": "^4.53.3"
+    "rollup": "^4.59.0"
   }
 }
