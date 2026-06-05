@@ -28269,7 +28269,9 @@ const execInteractive = async (command, args = []) =>
   });
 
 const download = async (url, path) => {
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    headers: { 'user-agent': 'setup-dvc/3.0.0' }
+  });
   if (res.status !== 200) {
     throw new Error(res.statusText);
   }
