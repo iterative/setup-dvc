@@ -21,7 +21,7 @@ Basic usage:
 steps:
   - uses: actions/checkout@v5
 
-  - uses: treeverse/setup-dvc@v2
+  - uses: treeverse/setup-dvc@v3
 ```
 
 A specific version can be pinned to your workflow using the `version` argument.
@@ -30,7 +30,7 @@ A specific version can be pinned to your workflow using the `version` argument.
 steps:
   - uses: actions/checkout@v5
 
-  - uses: treeverse/setup-dvc@v2
+  - uses: treeverse/setup-dvc@v3
     with:
       version: '3.62.0'
 ```
