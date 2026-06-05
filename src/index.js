@@ -3,8 +3,7 @@ import * as core from '@actions/core';
 
 try {
   const version = core.getInput('version');
-  const remoteDriver = core.getInput('remote_driver');
-  await setupDVC({ version, remoteDriver });
+  await setupDVC({ version });
   try {
     await prepGitRepo();
   } catch (err) {
@@ -13,5 +12,5 @@ try {
     );
   }
 } catch (error) {
-  core.setFailed(error.message);
+  core.setFailed(error);
 }

@@ -1,24 +1,30 @@
-import { promisify } from 'util';
-import { createWriteStream } from 'fs';
-import { unlink } from 'fs/promises';
-import fetch from 'node-fetch';
+import { promisify } from 'node:util';
+import { createWriteStream } from 'node:fs';
+import { unlink } from 'node:fs/promises';
 import * as core from '@actions/core';
-import path from 'path';
-import { exec as execSync, spawn } from 'child_process';
+import path from 'node:path';
+import { Readable } from 'node:stream';
+import { finished } from 'node:stream/promises';
+import { exec as execCb, spawn } from 'node:child_process';
 
-const execp = promisify(execSync);
-export const exec = async (command, opts) =>
-  new Promise((resolve, reject) => {
-    const { debug } = opts || {};
-
-    execp(command, (error, stdout, stderr) => {
-      if (debug) console.log(`\nCommand: ${command}\n\t${stdout}\n\t${stderr}`);
-
-      if (error) reject(error);
-
-      resolve((stdout || stderr).slice(0, -1));
-    });
-  });
+const execp = promisify(execCb);
+export const exec = async (command, opts) => {
+  const { debug } = opts || {};
+  try {
+    const { stdout, stderr } = await execp(command);
+    if (debug) {
+      console.log(`\nCommand: ${command}\n\t${stdout}\n\t${stderr}`);
+    }
+    return (stdout || stderr).slice(0, -1);
+  } catch (error) {
+    if (debug) {
+      console.log(
+        `\nCommand: ${command}\n\t${error.stdout}\n\t${error.stderr}`
+      );
+    }
+    throw error;
+  }
+};
 
 export const execInteractive = async (command, args = []) =>
   new Promise((resolve, reject) => {
@@ -32,24 +38,15 @@ export const execInteractive = async (command, args = []) =>
     });
   });
 
-const download = async (url, path) => {
+export const download = async (url, path) => {
   const res = await fetch(url);
-  const fileStream = createWriteStream(path);
-  await new Promise((resolve, reject) => {
-    if (res.status !== 200) {
-      fileStream.close();
-      return reject(new Error(res.statusText));
-    }
+  if (res.status !== 200) {
+    throw new Error(res.statusText);
+  }
 
-    res.body.pipe(fileStream);
-    res.body.on('error', err => {
-      fileStream.close();
-      reject(err);
-    });
-    fileStream.on('finish', () => {
-      resolve();
-    });
-  });
+  const body = Readable.fromWeb(res.body);
+  const fileStream = createWriteStream(path);
+  await finished(body.pipe(fileStream));
 };
 
 const downloadWithFallback = async (urls, dest) => {

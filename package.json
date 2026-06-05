@@ -37,11 +37,10 @@
     "all": "npm run lintfix && npm run build && npm test"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24"
   },
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "node-fetch": "^3.3.2"
+    "@actions/core": "^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
